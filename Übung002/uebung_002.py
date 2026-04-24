@@ -83,6 +83,7 @@ while running:
 
     #Player rect definiert 
     player_rect = pygame.Rect(player_x, player_y, player_radius, player_radius)
+    #Jonas guck hier bitte
     def collision(obstacles):
         if player_rect.colliderect(obstacles):
             player_movement_y -= 5
