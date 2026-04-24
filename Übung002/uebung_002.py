@@ -71,9 +71,10 @@ while running:
             elif event.key == pygame.K_d:
                 player_moving_right = False
 
+    
     # ---- Update ----
 
-    # Player-Bewegung + Gravitation + rect funktion (test)
+    # Player-Bewegung + Gravitation 
     if player_moving_right:
         player_x += 3
     elif player_moving_left:
@@ -83,15 +84,20 @@ while running:
 
     #Player rect definiert 
     player_rect = pygame.Rect(player_x, player_y, player_radius, player_radius)
-    #Jonas guck hier bitte
-    def collision(obstacles):
-        if player_rect.colliderect(obstacles):
-            player_movement_y -= 5
-            return  True
-        else:
-            return False    
     
-    collision(obstacles[0])
+    #if funktion, um zu checken, ob der Player mit einem Obejekt aus der Obstacles liste kollidiert 
+    if player_rect.collidelistall(obstacles):
+        player_movement_y = 0
+        player_gravity = 0
+
+        #Sprung (Tasteninput erhalten, Movement ausgeben und gravity wieder anstellen)
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_SPACE]:
+            player_movement_y  -= 8
+            player_gravity = 0.1
+    else:
+        #Wenn Player kein Objekt aus der Ostacles liste berührt wird die Gravitation wieder angestellt 
+        player_gravity = 0.1     
 
     # Bouncing circle: Gravitation + Bewegung
     circle_movement_y += gravity
