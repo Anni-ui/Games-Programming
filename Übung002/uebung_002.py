@@ -23,7 +23,8 @@ player_y = 100.0
 player_radius = 20
 player_moving_left = False
 player_moving_right = False
-player_gravity = 8
+player_movement_y = 0
+player_gravity = 0.1
 
 # ---- Bouncing circle (aus dem "Boing boing"-Beispiel) ----
 circle_x = 300.0
@@ -42,15 +43,6 @@ obstacles.append(pygame.Rect(5, SCREEN_HEIGHT - 10, SCREEN_WIDTH - 10, 10))
 
 # Plattform 001
 obstacles.append(pygame.Rect(200, SCREEN_HEIGHT - 60, 200, 10))
-
-#rectangl und funktion hinzugefügt (test)(noch nicht fertig)
-rectangle = pygame.Rect
-
-def rect(obstacles):
-    if pygame.Rect.collider(player_radius):
-        return True
-    else:
-        return False
 
 # ---- Status-Text ----
 status = "Wheee!"
@@ -86,8 +78,19 @@ while running:
         player_x += 3
     elif player_moving_left:
         player_x -= 3
-    player_y += player_gravity
-    # rect()
+    player_movement_y += player_gravity
+    player_y += player_movement_y
+
+    #Player rect definiert 
+    player_rect = pygame.Rect(player_x, player_y, player_radius, player_radius)
+    def collision(obstacles):
+        if player_rect.colliderect(obstacles):
+            player_movement_y -= 5
+            return  True
+        else:
+            return False    
+    
+    collision(obstacles[0])
 
     # Bouncing circle: Gravitation + Bewegung
     circle_movement_y += gravity
