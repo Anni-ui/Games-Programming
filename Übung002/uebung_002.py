@@ -82,23 +82,49 @@ while running:
     player_movement_y += player_gravity
     player_y += player_movement_y
 
-    #Player rect definiert 
+    #Player rect und circle rect definiert, um mit einander und anderen Dingen zu collidieren 
     player_rect = pygame.Rect(player_x, player_y, player_radius, player_radius)
+    circle_rect = pygame.Rect(circle_x, circle_y, circle_radius, circle_radius)
+    #funktion (Spieler ist am Boden) die Gravitation vom Spieler wird ausgeschaltet, sodass er nicht durch den Boden fällt
+    def on_ground():
+        global player_gravity
+        player_gravity = 0
+        global status
+        status = "Ouch!"
+
+    #funktion (Spieler ist nicht am Boden) die Gravitaion vom Spieler wird angeschaltet, sodass er nach dem Sprung wieder zu Boden fällt.    
+    def of_ground():
+        global player_gravity
+        player_gravity = 0.1   
+        global status
+        status = "Wheee!"
+
+    #versuch funktion einzubauen
+    def collision():
+        global player_movement_y
     
     #if funktion, um zu checken, ob der Player mit einem Obejekt aus der Obstacles liste kollidiert 
-    if player_rect.collidelistall(obstacles):
-        player_movement_y = 0
-        player_gravity = 0
+        if player_rect.collidelistall(obstacles):
+            player_movement_y = 0
+            on_ground()
 
         #Sprung (Tasteninput erhalten, Movement ausgeben und gravity wieder anstellen)
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_SPACE]:
-            player_movement_y  -= 8
-            player_gravity = 0.1
-    else:
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_SPACE]:
+                player_movement_y  -= 8
+                of_ground()
+            elif keys[pygame.K_w]:
+                player_movement_y  -= 8
+                of_ground()
+        else:
         #Wenn Player kein Objekt aus der Ostacles liste berührt wird die Gravitation wieder angestellt 
-        player_gravity = 0.1     
+            of_ground()   
 
+    #aufrufen der Collision funktion
+    collision()
+
+    if player_rect.colliderect(circle_rect):
+        status = "Ouch!"
     # Bouncing circle: Gravitation + Bewegung
     circle_movement_y += gravity
     circle_x += circle_movement_x
