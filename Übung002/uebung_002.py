@@ -17,6 +17,12 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Jump & Run")
 clock = pygame.time.Clock()
 
+# ---- Wände ---- versuch
+links = pygame.rect(0, 400, 0, 0)
+rechts = pygame.rect(600, 400, 0, 0)
+oben = pygame.rect(0, 400, SCREEN_WIDTH, 400)
+unten = pygame.rect(600, 0, SCREEN_WIDTH, 0)
+
 # ---- Player ----
 player_x = 100.0
 player_y = 100.0
@@ -122,6 +128,15 @@ while running:
 
     #aufrufen der Collision funktion
     collision()
+    
+    if player_rect.left < 0:
+        player_x = 0
+    #if player_x < SCREEN_WIDTH:
+    #   player_x = SCREEN_WIDTH
+    #if player_y < 0:
+    #    player_y = 0
+    #if player_radius < SCREEN_HEIGHT:
+     #   player_radius = SCREEN_HEIGHT 
 
     if player_rect.colliderect(circle_rect):
         status = "Ouch!"
