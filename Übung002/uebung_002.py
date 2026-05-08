@@ -1,7 +1,8 @@
 import pygame
+import random
 
 # ---- Bildschirm ----
-SCREEN_WIDTH = 600
+SCREEN_WIDTH = 600 
 SCREEN_HEIGHT = 400
 
 # ---- Farben (Rot, Grün, Blau, [Alpha]) ----
@@ -18,10 +19,10 @@ pygame.display.set_caption("Jump & Run")
 clock = pygame.time.Clock()
 
 # ---- Wände ---- versuch
-links = pygame.rect(0, 400, 0, 0)
-rechts = pygame.rect(600, 400, 0, 0)
-oben = pygame.rect(0, 400, SCREEN_WIDTH, 400)
-unten = pygame.rect(600, 0, SCREEN_WIDTH, 0)
+links = pygame.Rect(10, 400, 1, SCREEN_HEIGHT)
+# rechts = pygame.Rect(580, 400, 1, SCREEN_HEIGHT)
+unten = pygame.Rect(0, 400, SCREEN_WIDTH, 1)
+oben = pygame.Rect(0, 0, SCREEN_WIDTH, 1)
 
 # ---- Player ----
 player_x = 100.0
@@ -43,15 +44,28 @@ gravity = 0.1
 # ---- Obstacles (Boden + Plattformen) ----
 # Jedes Obstacle ist ein pygame.Rect(x, y, breite, hoehe)
 obstacles = []
+grenze = []
 
 # Boden
 obstacles.append(pygame.Rect(5, SCREEN_HEIGHT - 10, SCREEN_WIDTH - 10, 10))
+
+#Wände
+grenze.append(pygame.Rect(SCREEN_WIDTH, 400, 1 , SCREEN_HEIGHT))
+grenze.append(links)
+grenze.append(unten)
+grenze.append(oben)
+
+# convert_alpha für sprites mit transparentem bg . convert mit solid bg - immer png 
 
 # Plattform 001
 obstacles.append(pygame.Rect(200, SCREEN_HEIGHT - 60, 200, 10))
 
 # ---- Status-Text ----
 status = "Wheee!"
+
+#Player rect und circle rect definiert, um mit einander und anderen Dingen zu collidieren 
+player_rect = pygame.Rect(player_x, player_y, player_radius * 2, player_radius * 2)
+circle_rect = pygame.Rect(circle_x, circle_y, circle_radius, circle_radius)
 
 # ============================================================
 # Game Loop
@@ -82,15 +96,17 @@ while running:
 
     # Player-Bewegung + Gravitation 
     if player_moving_right:
-        player_x += 3
+        player_rect.x += 3
     elif player_moving_left:
-        player_x -= 3
+        player_rect.x -= 3
     player_movement_y += player_gravity
-    player_y += player_movement_y
+    player_rect.y += player_movement_y
 
-    #Player rect und circle rect definiert, um mit einander und anderen Dingen zu collidieren 
-    player_rect = pygame.Rect(player_x, player_y, player_radius, player_radius)
-    circle_rect = pygame.Rect(circle_x, circle_y, circle_radius, circle_radius)
+    if player_rect.x < 0:
+       player_rect.x = 0
+    if player_rect.x >= SCREEN_WIDTH - 40:
+       player_rect.x = SCREEN_WIDTH - 40
+
     #funktion (Spieler ist am Boden) die Gravitation vom Spieler wird ausgeschaltet, sodass er nicht durch den Boden fällt
     def on_ground():
         global player_gravity
@@ -125,18 +141,19 @@ while running:
         else:
         #Wenn Player kein Objekt aus der Ostacles liste berührt wird die Gravitation wieder angestellt 
             of_ground()   
-
-    #aufrufen der Collision funktion
-    collision()
+     
+    if player_rect.collidelistall(grenze):
+            player_movement_x = 0
     
-    if player_rect.left < 0:
-        player_x = 0
-    #if player_x < SCREEN_WIDTH:
-    #   player_x = SCREEN_WIDTH
+    
+    
     #if player_y < 0:
     #    player_y = 0
     #if player_radius < SCREEN_HEIGHT:
      #   player_radius = SCREEN_HEIGHT 
+
+    #aufrufen der Collision funktion
+    collision()
 
     if player_rect.colliderect(circle_rect):
         status = "Ouch!"
@@ -164,7 +181,7 @@ while running:
     pygame.draw.circle(screen, CIRCLE_COL, (int(circle_x), int(circle_y)), circle_radius)
 
     # Player zeichnen
-    pygame.draw.circle(screen, PLAYER_COL, (int(player_x), int(player_y)), player_radius)
+    pygame.draw.circle(screen, PLAYER_COL, player_rect.center, player_radius)
 
     # Text zeichnen
     font = pygame.font.SysFont(None, 24)
