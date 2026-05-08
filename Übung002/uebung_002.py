@@ -18,11 +18,6 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Jump & Run")
 clock = pygame.time.Clock()
 
-# ---- Wände ---- versuch
-links = pygame.Rect(10, 400, 1, SCREEN_HEIGHT)
-# rechts = pygame.Rect(580, 400, 1, SCREEN_HEIGHT)
-unten = pygame.Rect(0, 400, SCREEN_WIDTH, 1)
-oben = pygame.Rect(0, 0, SCREEN_WIDTH, 1)
 
 # ---- Player ----
 player_x = 100.0
@@ -44,21 +39,27 @@ gravity = 0.1
 # ---- Obstacles (Boden + Plattformen) ----
 # Jedes Obstacle ist ein pygame.Rect(x, y, breite, hoehe)
 obstacles = []
-grenze = []
 
 # Boden
 obstacles.append(pygame.Rect(5, SCREEN_HEIGHT - 10, SCREEN_WIDTH - 10, 10))
 
-#Wände
-grenze.append(pygame.Rect(SCREEN_WIDTH, 400, 1 , SCREEN_HEIGHT))
-grenze.append(links)
-grenze.append(unten)
-grenze.append(oben)
-
 # convert_alpha für sprites mit transparentem bg . convert mit solid bg - immer png 
 
 # Plattform 001
-obstacles.append(pygame.Rect(200, SCREEN_HEIGHT - 60, 200, 10))
+obstacles.append(pygame.Rect(0, SCREEN_HEIGHT - 60, 150, 10))
+
+# Plattform 002
+obstacles.append(pygame.Rect(170, SCREEN_HEIGHT - 200, 40, 10))
+
+# Plattform 003
+obstacles.append(pygame.Rect(250, SCREEN_HEIGHT - 110, 60, 10))
+
+# Plattform 004
+obstacles.append(pygame.Rect(370, SCREEN_HEIGHT - 150, 80, 10))
+
+# Plattform 005
+obstacles.append(pygame.Rect(500, SCREEN_HEIGHT - 40, 100, 10))
+
 
 # ---- Status-Text ----
 status = "Wheee!"
@@ -66,6 +67,41 @@ status = "Wheee!"
 #Player rect und circle rect definiert, um mit einander und anderen Dingen zu collidieren 
 player_rect = pygame.Rect(player_x, player_y, player_radius * 2, player_radius * 2)
 circle_rect = pygame.Rect(circle_x, circle_y, circle_radius, circle_radius)
+
+#funktion (Spieler ist am Boden) die Gravitation vom Spieler wird ausgeschaltet, sodass er nicht durch den Boden fällt
+def on_ground():
+        global player_gravity
+        player_gravity = 0
+        global status
+        status = "Ouch!"
+
+    #funktion (Spieler ist nicht am Boden) die Gravitaion vom Spieler wird angeschaltet, sodass er nach dem Sprung wieder zu Boden fällt.    
+def of_ground():
+        global player_gravity
+        player_gravity = 0.1   
+        global status
+        status = "Wheee!"
+
+    #funktion Collision, checkt, ob der Player mit den Objekten aus Obstacles kolliediert. Falls ja wird die Bewegung auf der x-Achse angehalten und die Gravitation des Players auf 0 gesetzt, um ihn nicht weiter nach unten zu ziehen.
+def collision():
+        global player_movement_y
+    
+    #if funktion, um zu checken, ob der Player mit einem Obejekt aus der Obstacles liste kollidiert 
+        if player_rect.collidelistall(obstacles):
+            player_movement_y = 0
+            on_ground()
+
+        #Sprung (Tasteninput erhalten, Movement ausgeben und gravity wieder anstellen)
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_SPACE]:
+                player_movement_y  -= 5.5
+                of_ground()
+            elif keys[pygame.K_w]:
+                player_movement_y  -= 5.5
+                of_ground()
+        else:
+        #Wenn Player kein Objekt aus der Ostacles liste berührt wird die Gravitation wieder angestellt 
+            of_ground()  
 
 # ============================================================
 # Game Loop
@@ -102,55 +138,12 @@ while running:
     player_movement_y += player_gravity
     player_rect.y += player_movement_y
 
+    # Checken, ob der Player mit den Wänden Collidiert. Falls ja wird die Bewegung auf der y-Achse des Players angehalten, sodass er nicht außerhalb des Bildschirms sein kann.
     if player_rect.x < 0:
        player_rect.x = 0
     if player_rect.x >= SCREEN_WIDTH - 40:
-       player_rect.x = SCREEN_WIDTH - 40
-
-    #funktion (Spieler ist am Boden) die Gravitation vom Spieler wird ausgeschaltet, sodass er nicht durch den Boden fällt
-    def on_ground():
-        global player_gravity
-        player_gravity = 0
-        global status
-        status = "Ouch!"
-
-    #funktion (Spieler ist nicht am Boden) die Gravitaion vom Spieler wird angeschaltet, sodass er nach dem Sprung wieder zu Boden fällt.    
-    def of_ground():
-        global player_gravity
-        player_gravity = 0.1   
-        global status
-        status = "Wheee!"
-
-    #versuch funktion einzubauen
-    def collision():
-        global player_movement_y
-    
-    #if funktion, um zu checken, ob der Player mit einem Obejekt aus der Obstacles liste kollidiert 
-        if player_rect.collidelistall(obstacles):
-            player_movement_y = 0
-            on_ground()
-
-        #Sprung (Tasteninput erhalten, Movement ausgeben und gravity wieder anstellen)
-            keys = pygame.key.get_pressed()
-            if keys[pygame.K_SPACE]:
-                player_movement_y  -= 8
-                of_ground()
-            elif keys[pygame.K_w]:
-                player_movement_y  -= 8
-                of_ground()
-        else:
-        #Wenn Player kein Objekt aus der Ostacles liste berührt wird die Gravitation wieder angestellt 
-            of_ground()   
-     
-    if player_rect.collidelistall(grenze):
-            player_movement_x = 0
-    
-    
-    
-    #if player_y < 0:
-    #    player_y = 0
-    #if player_radius < SCREEN_HEIGHT:
-     #   player_radius = SCREEN_HEIGHT 
+       player_rect.x = SCREEN_WIDTH - 40 
+       
 
     #aufrufen der Collision funktion
     collision()
