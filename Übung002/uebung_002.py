@@ -27,6 +27,7 @@ player_moving_left = False
 player_moving_right = False
 player_movement_y = 0
 player_gravity = 0.1
+player_image = pygame.image.load("otter_3.png").convert_alpha()
 
 # ---- Bouncing circle (aus dem "Boing boing"-Beispiel) ----
 circle_x = 300.0
@@ -174,7 +175,8 @@ while running:
     pygame.draw.circle(screen, CIRCLE_COL, (int(circle_x), int(circle_y)), circle_radius)
 
     # Player zeichnen
-    pygame.draw.circle(screen, PLAYER_COL, player_rect.center, player_radius)
+    rect = player_image.get_rect(center=(player_x, player_y))
+    screen.blit(player_image, rect)
 
     # Text zeichnen
     font = pygame.font.SysFont(None, 24)
