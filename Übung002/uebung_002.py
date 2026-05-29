@@ -18,6 +18,9 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Jump & Run")
 clock = pygame.time.Clock()
 
+# ---- Sound ----
+jump_sound = pygame.mixer.Sound("jump.wav")
+
 
 # ---- Player ----
 player_x = 100.0
@@ -96,9 +99,11 @@ def collision():
             keys = pygame.key.get_pressed()
             if keys[pygame.K_SPACE]:
                 player_movement_y  -= 5.5
+                jump_sound.play()
                 of_ground()
             elif keys[pygame.K_w]:
                 player_movement_y  -= 5.5
+                jump_sound.play()
                 of_ground()
         else:
         #Wenn Player kein Objekt aus der Ostacles liste berührt wird die Gravitation wieder angestellt 
@@ -175,7 +180,7 @@ while running:
     pygame.draw.circle(screen, CIRCLE_COL, (int(circle_x), int(circle_y)), circle_radius)
 
     # Player zeichnen
-    rect = player_image.get_rect(center=(player_x, player_y))
+    rect = player_image.get_rect(center=(player_rect.x, player_rect.y))
     screen.blit(player_image, rect)
 
     # Text zeichnen
