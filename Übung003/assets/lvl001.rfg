@@ -39,6 +39,7 @@
 # "O": means an obstacle.
 # "T": Describes to the right of which track it is. Meaning T(0) means it is between the first and the second track.
 # "D": Describes at which point it appears (D like in Duration).
+# "A(example)": means animation. The files named example001.png, example002.png, etc. will be loaded.
 # "L": Describes how long it is (in duration points).
 # "C": Describes the color. The syntax is "C(R,B,G)", where the three values show red, green and blue values for the colour.
 # 		The values for R, G, B, must be between 0 and 255.
@@ -49,4 +50,4 @@ L T(2) B(background.png) M(Backgnd001music) D(2000)
 
 E D(1) S(1) A(enemy) N(5) T(0) P(100)
 
-O T(0) D(100) L(100) C(35,56,90) W(5)
+O T(0) D(100) A(obstacle) L(100) C(35,56,90) W(5)

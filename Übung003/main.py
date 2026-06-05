@@ -68,7 +68,13 @@ def main():
         level.step()
 
         # TODO: Check collisions (shots vs enemies, enemies vs player)
+        for obstacle in level.obstacles:
+             if obstacle.collision(player.get_rect()):
+                 player.hp -= 1
+            
         # TODO: Check player.hp <= 0 for death / game_state transition
+        if player.hp <= 0:
+            pygame.quit()
 
         # -------------------------------------------------------------- #
         #  Draw                                                          #
@@ -80,6 +86,8 @@ def main():
 
         # TODO: Draw enemies
         # TODO: Draw obstacles
+        for obstacle in level.obstacles:
+            obstacle.draw(screen)
 
         # Draw player (also draws its shots internally)
         player.draw(screen)

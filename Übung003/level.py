@@ -147,6 +147,7 @@ class Level(Entity):
         Creates Obstacle objects (not drawn or collision-checked)."""
         track = int(self._parse_param(line, "T") or 0)
         duration_start = int(self._parse_param(line, "D") or 0)
+        anim_prefix = self._parse_param(line, "A") or "obstacle"
         length = int(self._parse_param(line, "L") or 0)
         width = int(self._parse_param(line, "W") or 5)
 
@@ -159,24 +160,38 @@ class Level(Entity):
             int(color_parts[2]),
         )
 
-        obstacle = Obstacle(
-            track=track,
-            duration_start=duration_start,
-            length=length,
-            color=color,
-            width=width,
+        obstacle = Obstacle()
+        obstacle.setup(
+            x=0, y=0, dx=0, dy=0,
+            image_prefix=anim_prefix,
+            anim_speed=0,
+            hp=0,
         )
+
+        # Obstacle-spezifische Werte direkt setzen
+        obstacle.track = track
+        obstacle.duration_start = duration_start
+        obstacle.length = length
+        obstacle.color = color
+        obstacle.width = width
+
+        if self.num_tracks > 0:
+            track_width = SCREEN_WIDTH // self.num_tracks
+            enemy_center_x = track_width * (track + 1)
+            obstacle.pos.x = enemy_center_x - obstacle.hitbox_w // 2
+            obstacle.pos.y = duration_start
+            
 
         # Compute screen coordinates
         # X position: centered on the border between track and track+1
         # Y position: placed relative to the screen using duration as a
         # pixel offset from the top (students may adjust when adding scrolling)
-        if self.num_tracks > 0:
-            track_width = SCREEN_WIDTH // self.num_tracks
-            obstacle_x = track_width * (track + 1)
-            obstacle.x1 = obstacle_x - width // 2
-            obstacle.x2 = obstacle_x + width // 2
-            obstacle.y1 = duration_start
-            obstacle.y2 = duration_start + length
+        #if self.num_tracks > 0:
+        #    track_width = SCREEN_WIDTH // self.num_tracks
+        #    obstacle_x = track_width * (track + 1)
+        #    obstacle.x1 = obstacle_x - width // 2
+        #    obstacle.x2 = obstacle_x + width // 2
+        #    obstacle.y1 = duration_start
+        #    obstacle.y2 = duration_start + length
 
         self.obstacles.append(obstacle)
