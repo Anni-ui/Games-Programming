@@ -61,7 +61,7 @@ class Player(Entity):
         mouse_x, _ = pygame.mouse.get_pos()
         self.pos.x = mouse_x
 
-         # Player X follows mouse X position
+         # Player Y follows mouse Y position
         _ , mouse_y = pygame.mouse.get_pos()
         self.pos.y = mouse_y
 

@@ -43,59 +43,70 @@ def main():
     level = Level()
     level.load("lvl001.rfg")
 
+    game_state = "gameover" # game over state (alles anhalten und Game over printen)
+    game_state = "titel"    # titel state (title screen)
     game_state = "playing"  # TODO: Add "title" and "gameover" states
-
+    
+    #if game_state == "gameover":
+    #font = pygame.font.Font()
+    #text_image = font.render("Game Over!", True, (255, 255, 255))
+    
     # ------------------------------------------------------------------ #
     #  Game loop                                                         #
     # ------------------------------------------------------------------ #
+    #if game_state == "playing":
     running = True
     while running:
 
         # -------------------------------------------------------------- #
-        #  Event handling                                                 #
+        #  Event handling                                                #
         # -------------------------------------------------------------- #
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
                     running = False
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        running = False
 
         # -------------------------------------------------------------- #
         #  Update                                                        #
         # -------------------------------------------------------------- #
-        player.step()
-        level.step()
+            player.step()
+            level.step()
 
         # TODO: Check collisions (shots vs enemies, enemies vs player)
-        for obstacle in level.obstacles:
-             if obstacle.collision(player.get_rect()):
-                 player.hp -= 1
+            for obstacle in level.obstacles:
+                if obstacle.collision(player.get_rect()):
+                    player.hp -= 1
             
         # TODO: Check player.hp <= 0 for death / game_state transition
-        if player.hp <= 0:
-            pygame.quit()
+            if player.hp <= 0:
+                #game_state = "gameover"
+                pygame.quit()
 
         # -------------------------------------------------------------- #
         #  Draw                                                          #
         # -------------------------------------------------------------- #
-        screen.fill(BLACK)
+            screen.fill(BLACK)
 
         # Draw level background first
-        level.draw(screen)
+            level.draw(screen)
 
-        # TODO: Draw enemies
-        # TODO: Draw obstacles
-        for obstacle in level.obstacles:
-            obstacle.draw(screen)
+            # TODO: Draw enemies
+            # TODO: Draw obstacles
+            for obstacle in level.obstacles:
+                obstacle.draw(screen)
 
-        # Draw player (also draws its shots internally)
-        player.draw(screen)
+            # Draw player (also draws its shots internally)
+            player.draw(screen)
+
+        # Game Over Text anzeigen     
+        #screen.blit(text_image, (200, 250))
 
         # TODO: Draw player HP (text or health bar)
 
-        pygame.display.flip()
-        clock.tick(FPS)
+            pygame.display.flip()
+            clock.tick(FPS)
 
     # ------------------------------------------------------------------ #
     #  Cleanup                                                           #

@@ -18,8 +18,7 @@ class Obstacle(Entity):
         length: int = 0,
         color: tuple[int, int, int] = (255, 255, 255),
         width: int = 5,
-        upgrade: bool = False,
-        downgrade: bool = False 
+        upgrade: bool = False
     ):
         self.track = track              # Which track (column) the obstacle is on
         self.duration_start = duration_start  # When it appears (in level duration)
@@ -27,13 +26,10 @@ class Obstacle(Entity):
         self.color = color              # RGB color tuple
         self.width = width              # Pixel width
         self.upgrade = upgrade          # upgrades for player 
-        self.downgrade = downgrade      # downgrade for player 
 
-        #upgrade und downgrade funktion 
+        #upgrade und funktion 
         #if Obstacle(upgrade):
         #    print("upgrade")
-        #elif Obstacle(downgrade):
-        #    print("downgrade")
         
     def collision(self, rect):
         if self.get_rect().colliderect(rect):
