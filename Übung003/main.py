@@ -14,6 +14,7 @@ import pygame
 from settings import SCREEN_WIDTH, SCREEN_HEIGHT, FPS, BLACK
 from player import Player
 from level import Level
+from shot import Shot
 
 
 def main():
@@ -38,7 +39,7 @@ def main():
         anim_speed=1,
         hp=100,
     )
-    player.set_might(rng=100, dmg=1, cad=50, shotspd=1)
+    player.set_might(rng=1000, dmg=1, cad=50, shotspd=1)
 
     level = Level()
     level.load("lvl001.rfg")
@@ -78,6 +79,17 @@ def main():
             for obstacle in level.obstacles:
                 if obstacle.collision(player.get_rect()):
                     player.hp -= 1
+                #elif obstacle.collision(Shot.get_rect()):
+                    #print("hit")
+            
+            # Collison enemies and player (player verliert hp, enemies verlieren hp und despawnen)
+            for enemies in level.enemies:
+                if enemies.collision(player.get_rect()):
+                    player.hp -= 1
+                    enemies.hp -= 5
+                    enemies.is_alive()
+                #elif enemies.collision(shots.get_rect()):
+                    #enemies.hp -= 1
             
         # TODO: Check player.hp <= 0 for death / game_state transition
             if player.hp <= 0:
@@ -93,6 +105,9 @@ def main():
             level.draw(screen)
 
             # TODO: Draw enemies
+            for enemies in level.enemies:
+                enemies.draw(screen)
+
             # TODO: Draw obstacles
             for obstacle in level.obstacles:
                 obstacle.draw(screen)

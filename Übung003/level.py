@@ -141,6 +141,23 @@ class Level(Entity):
         track = int(self._parse_param(line, "T") or 0)
         position = int(self._parse_param(line, "P") or 0)
         # TODO: Students create and store Enemy objects here
+        
+        enemy = Enemy()
+        enemy.setup(
+            x=0, y=0, dx=0, dy=0,
+            image_prefix=anim_prefix,
+            anim_speed=0,
+            hp=0
+        )
+
+        # Enemy spezifische Werte direkt setzen 
+        enemy.damage = damage 
+        enemy.speed = speed
+        enemy.count = count
+        enemy.track = track
+        enemy.position = position 
+
+        self.enemies.append(enemy)
 
     def _parse_obstacle_line(self, line: str):
         """Parse: O T(0) D(100) L(100) C(35,56,90) W(5)

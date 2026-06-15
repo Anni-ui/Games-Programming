@@ -54,6 +54,10 @@ class Enemy(Entity):
             direction = target_pos - self.pos
             # TODO: Normalize direction, apply speed, move toward target
 
+    def collision(self, rect):
+        if self.get_rect().colliderect(rect):
+            return True
+
     # ------------------------------------------------------------------ #
     #  is_alive — check if enemy HP is above 0 (latches to dead)        #
     # ------------------------------------------------------------------ #
