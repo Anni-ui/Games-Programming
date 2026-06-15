@@ -41,6 +41,10 @@ class Shot(Entity):
             self.hitbox_w = rect.width
             self.hitbox_h = rect.height
 
+    def collision(self, rect):
+        if self.get_rect().colliderect(rect):
+            return True
+
     # ------------------------------------------------------------------ #
     #  step — move and decrement lifetime                                #
     # ------------------------------------------------------------------ #

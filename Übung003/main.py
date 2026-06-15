@@ -14,7 +14,7 @@ import pygame
 from settings import SCREEN_WIDTH, SCREEN_HEIGHT, FPS, BLACK
 from player import Player
 from level import Level
-from shot import Shot
+#from player import Shot
 
 
 def main():
@@ -88,9 +88,14 @@ def main():
                     player.hp -= 1
                     enemies.hp -= 5
                     enemies.is_alive()
-                #elif enemies.collision(shots.get_rect()):
+                #elif enemies.collision(shot.get_rect()):
                     #enemies.hp -= 1
             
+            #for shot in self.shots:
+                #if shot.collision(enemies.get_rect):
+                    #enemies.hp -= 5
+
+
         # TODO: Check player.hp <= 0 for death / game_state transition
             if player.hp <= 0:
                 #game_state = "gameover"
