@@ -11,10 +11,12 @@
 #   - Parsed (but inactive) enemies and obstacles
 
 import pygame
+from game import Game
 from settings import SCREEN_WIDTH, SCREEN_HEIGHT, FPS, BLACK
 from player import Player
 from level import Level
-#from player import Shot
+from shot import Shot
+from enemy import Enemy
 
 
 def main():
@@ -41,8 +43,24 @@ def main():
     )
     player.set_might(rng=1000, dmg=1, cad=50, shotspd=1)
 
+    shot = Shot()
+
+    enemy = Enemy()
+    enemy.setup(
+        x=SCREEN_WIDTH // 2,
+        y=SCREEN_HEIGHT,
+        dx=0,
+        dy=0,
+        image_prefix="enemy",
+        anim_speed=1,
+        hp=10,
+        damage=1
+    )
+
     level = Level()
     level.load("lvl001.rfg")
+
+    game_state = Game() 
 
     game_state = "gameover" # game over state (alles anhalten und Game over printen)
     game_state = "titel"    # titel state (title screen)
@@ -88,12 +106,10 @@ def main():
                     player.hp -= 1
                     enemies.hp -= 5
                     enemies.is_alive()
-                #elif enemies.collision(shot.get_rect()):
-                    #enemies.hp -= 1
-            
-            #for shot in self.shots:
-                #if shot.collision(enemies.get_rect):
-                    #enemies.hp -= 5
+                elif enemies.collision(shot.get_rect()):
+                    enemies.hp -= 1
+                    enemies.is_alive()
+                    print("Hit!")
 
 
         # TODO: Check player.hp <= 0 for death / game_state transition
