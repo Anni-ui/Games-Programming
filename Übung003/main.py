@@ -17,6 +17,7 @@ from player import Player
 from level import Level
 from shot import Shot
 from enemy import Enemy
+#   from obstacle import Obstacle
 
 
 def main():
@@ -41,7 +42,7 @@ def main():
         anim_speed=1,
         hp=100,
     )
-    player.set_might(rng=1000, dmg=1, cad=50, shotspd=1)
+    player.set_might(rng=1000,dmg=10, cad=10, shotspd=10)
 
     shot = Shot()
 
@@ -57,42 +58,67 @@ def main():
         damage=1
     )
 
+    #obstacle = Obstacle()
+    #obstacle.setup(
+    #)
+
     level = Level()
     level.load("lvl001.rfg")
 
-    game_state = Game() 
+    game_state = Game()     
+    
+       #game_state.change_state("titel")
 
-    game_state = "gameover" # game over state (alles anhalten und Game over printen)
-    game_state = "titel"    # titel state (title screen)
-    game_state = "playing"  # TODO: Add "title" and "gameover" states
-    
-    #if game_state == "gameover":
-    #font = pygame.font.Font()
-    #text_image = font.render("Game Over!", True, (255, 255, 255))
-    
     # ------------------------------------------------------------------ #
     #  Game loop                                                         #
     # ------------------------------------------------------------------ #
     #if game_state == "playing":
     running = True
     while running:
+        dt = clock.tick(FPS)
+        events = pygame.event.get()
 
         # -------------------------------------------------------------- #
         #  Event handling                                                #
         # -------------------------------------------------------------- #
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    running = False
-                elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        running = False
+        for event in events:
+            if event.type == pygame.QUIT:
+                running = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                     running = False
 
         # -------------------------------------------------------------- #
         #  Update                                                        #
         # -------------------------------------------------------------- #
+        if game_state.state == "title":
+            for event in events:
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_e:
+                        game_state.change_state("playing")
+
+           #Draw
+            screen.fill(BLACK)
+
+            title_font = pygame.font.SysFont(None, 96)
+            hint_font = pygame.font.SysFont(None, 40)
+
+            title_text = title_font.render("Shooty^^", True, (255, 255, 255))
+            hint_text = hint_font.render("Press E to play", True, (200, 200, 200))
+           
+            screen.blit(title_text, (SCREEN_WIDTH // 2 - title_text.get_width() // 2, SCREEN_HEIGHT // 3))
+            screen.blit(hint_text, (SCREEN_WIDTH // 2 - hint_text.get_width() // 2, SCREEN_HEIGHT // 2))
+
+            pygame.display.flip()
+
+
+        elif game_state.state == "playing":
             player.step()
             level.step()
 
+        # -------------------------------------------------------------- #
+        #  Collision                                                     
+        # -------------------------------------------------------------- #
         # TODO: Check collisions (shots vs enemies, enemies vs player)
             for obstacle in level.obstacles:
                 if obstacle.collision(player.get_rect()):
@@ -102,20 +128,22 @@ def main():
             
             # Collison enemies and player (player verliert hp, enemies verlieren hp und despawnen)
             for enemies in level.enemies:
+                if not enemy.alive:
+                    continue
+
                 if enemies.collision(player.get_rect()):
                     player.hp -= 1
                     enemies.hp -= 5
                     enemies.is_alive()
+
                 elif enemies.collision(shot.get_rect()):
-                    enemies.hp -= 1
+                    enemies.hp -= 100
                     enemies.is_alive()
-                    print("Hit!")
 
 
         # TODO: Check player.hp <= 0 for death / game_state transition
             if player.hp <= 0:
-                #game_state = "gameover"
-                pygame.quit()
+                game_state.change_state("gameover")
 
         # -------------------------------------------------------------- #
         #  Draw                                                          #
@@ -143,6 +171,13 @@ def main():
 
             pygame.display.flip()
             clock.tick(FPS)
+
+        elif game_state.state == "gameover":
+            screen.fill(BLACK)
+            font = pygame.font.SysFont(None, 72)
+            text = font.render("Game Over!", True, (255, 255, 255))
+            screen.blit(text, (SCREEN_WIDTH // 2 - text.get_width() // 2, SCREEN_HEIGHT // 2))
+            pygame.display.flip()
 
     # ------------------------------------------------------------------ #
     #  Cleanup                                                           #

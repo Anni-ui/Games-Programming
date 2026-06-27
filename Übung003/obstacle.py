@@ -36,14 +36,15 @@ class Obstacle(Entity):
         #if Obstacle(upgrade):
         #    print("upgrade")
         
-    def collision(self, rect):
-        if self.get_rect().colliderect(rect):
-            return True
             
         # Derived screen coordinates (students compute these from track layout)
         self.x1 = 0
         self.x2 = 0
         self.y1 = 0
         self.y2 = 0
-
+    
+    def collision(self, rect):
+        if self.get_rect().colliderect(rect):
+            return True
+        
     obstacles = pygame.Rect(5, 5, 5, 5)

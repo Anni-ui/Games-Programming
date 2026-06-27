@@ -54,12 +54,24 @@ class Enemy(Entity):
             direction = target_pos - self.pos
             # TODO: Normalize direction, apply speed, move toward target
 
-    def collision(self, rect):
-        if self.get_rect().colliderect(rect):
-            return True
+    # ------------------------------------------------------------------ #
+    #  wird nur gezeichnet, wenn enemy lebt                              #
+    # ------------------------------------------------------------------ #
+    def draw(self, screen):
+        if not self.alive:
+            return              # Toter Enemy wird nicht gezeichnet
+        super().draw(screen)
 
     # ------------------------------------------------------------------ #
-    #  is_alive — check if enemy HP is above 0 (latches to dead)        #
+    #  gets rect for collision                                           #
+    # ------------------------------------------------------------------ #
+    def collision(self, rect):
+        if not self.alive:
+            return False
+        return self.get_rect().colliderect(rect)
+
+    # ------------------------------------------------------------------ #
+    #  is_alive — check if enemy HP is above 0 (latches to dead)         #
     # ------------------------------------------------------------------ #
     def is_alive(self) -> bool:
         """Return True if the enemy is alive. Once HP drops to 0,

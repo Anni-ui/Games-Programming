@@ -1,3 +1,5 @@
+#game.py 
+#Game_states werden erstellt und geändert 
 class Game:
     STATES = {"title", "playing", "shop", "gameover"}
 
@@ -9,3 +11,8 @@ class Game:
         elif self.state == "playing":  self._update_playing(dt)
         elif self.state == "shop":     self._update_shop(dt)
         elif self.state == "gameover": self._update_gameover(dt)
+
+    def change_state(self, new):
+        assert new in self.STATES, f"unknown state: {new}"   # Unit 8
+        print(f"[state] {self.state} -> {new}")              # free log
+        self.state = new
