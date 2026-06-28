@@ -115,7 +115,7 @@ class Player(Entity):
             self.set_might(rng=self.rng, dmg=self.dmg + 5, cad=self.cad, shotspd=self.shotspd)
             print("Upgrade: Schaden +5")
         elif choice == "cad":
-            self.set_might(rng=self.rng, dmg=self.dmg, cad=max(1, self.cad - 2), shotspd=self.shotspd)
+            self.set_might(rng=self.rng, dmg=self.dmg, cad=max(5, self.cad - 2), shotspd=self.shotspd)
             print("Upgrade: Feuerrate +")
         elif choice == "shotspd":
             self.set_might(rng=self.rng, dmg=self.dmg, cad=self.cad, shotspd=self.shotspd + 3)

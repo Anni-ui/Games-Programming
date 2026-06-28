@@ -110,7 +110,7 @@ def main():
         # ------------------------------------------------------------------ #
         elif game_state.state == "playing":
             player.step()
-            #level.step()
+            level.step()
 
             for enemies in level.enemies:
                 enemies.step(target_pos = player.pos, speed = 1)
@@ -121,9 +121,8 @@ def main():
         # -------------------------------------------------------------- #
             # Check collisions obstacle und player
             for obstacle in level.obstacles:
-                if obstacle.collision(player.get_rect()):
-                    player.hp -= 1
-
+                if obstacle.active and obstacle.collision(player.get_rect()):
+                    obstacle.active = False
                     player.random_upgrade()
 
                     #Upgrade Text anzeigen 
@@ -142,7 +141,7 @@ def main():
                         enemies.pos -= direction * 1  # Einen Schritt zurück
 
 
-            # Collison enemies und player, enemies und shot(player verliert hp, enemies verlieren hp und despawnen)
+            # Collison enemies und player(player verliert hp, enemies verlieren hp und despawnen)
             for enemies in level.enemies:
                 if not enemy.alive:
                     continue
@@ -152,9 +151,13 @@ def main():
                     enemies.hp -= 5
                     enemies.is_alive()
 
-                elif enemies.collision(shot.get_rect()):
-                    enemies.hp -= 100
-                    enemies.is_alive()
+            # Collision enemies und shots 
+            for s in player.shots:
+                if enemies.collision(s.get_rect()):
+                    enemies.hp -= s.dmg                 # enemie verliert hp, je nach zugewiesenem Schadenswert des Shots
+                    enemies.is_alive()                  # checkt, ob enemie noch hp hat 
+                    s.life = 0                          # Schuss nach Treffer entfernen
+                    break
 
             # Check player.hp <= 0 for death / game_state transition
             if player.hp <= 0:
@@ -174,6 +177,8 @@ def main():
 
             # Draw obstacles
             for obstacle in level.obstacles:
+                if not obstacle.active:
+                    continue
                 obstacle.draw(screen)
 
             # Draw player (also draws its shots internally)

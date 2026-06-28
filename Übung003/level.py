@@ -139,8 +139,8 @@ class Level(Entity):
         count = int(self._parse_param(line, "N") or 1)
         track = int(self._parse_param(line, "T") or 0)
         position = int(self._parse_param(line, "P") or 0)
-        # TODO: Students create and store Enemy objects here
         
+        # create and store Enemy objects here
         enemy = Enemy()
         enemy.setup(
             x=0, y=0, dx=0, dy=0,

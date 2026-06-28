@@ -51,7 +51,7 @@ class Shot(Entity):
     def step(self):
         """Move the shot and reduce its remaining life."""
         super().step()
-        self.life -= 1
+        self.life -= abs(self.dir.y)
 
     # ------------------------------------------------------------------ #
     #  is_alive — check if shot still has life remaining                 #
