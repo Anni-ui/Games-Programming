@@ -66,9 +66,8 @@ class Level(Entity):
     #  step — EMPTY in skeleton (no scrolling, no enemy spawning)        #
     # ------------------------------------------------------------------ #
     def step(self):
-        """Per-frame update. Empty in the skeleton — no scrolling or
-        enemy spawning. Students implement this in Uebung 003."""
-        pass
+        for obstacle in self.obstacles:
+            obstacle.step(speed = 2)
 
     # ------------------------------------------------------------------ #
     #  draw — render background image                                    #

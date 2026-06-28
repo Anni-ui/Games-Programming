@@ -12,12 +12,11 @@
 
 import pygame
 from game import Game
-from settings import SCREEN_WIDTH, SCREEN_HEIGHT, FPS, BLACK
+from settings import SCREEN_WIDTH, SCREEN_HEIGHT, FPS, BLACK, WHITE
 from player import Player
 from level import Level
 from shot import Shot
 from enemy import Enemy
-#   from obstacle import Obstacle
 
 
 def main():
@@ -49,7 +48,7 @@ def main():
     enemy = Enemy()
     enemy.setup(
         x=SCREEN_WIDTH // 2,
-        y=SCREEN_HEIGHT,
+        y=20 ,
         dx=0,
         dy=0,
         image_prefix="enemy",
@@ -58,16 +57,11 @@ def main():
         damage=1
     )
 
-    #obstacle = Obstacle()
-    #obstacle.setup(
-    #)
-
     level = Level()
     level.load("lvl001.rfg")
 
     game_state = Game()     
     
-       #game_state.change_state("titel")
 
     # ------------------------------------------------------------------ #
     #  Game loop                                                         #
@@ -111,22 +105,44 @@ def main():
 
             pygame.display.flip()
 
-
+        # ------------------------------------------------------------------ #
+        #  PLAYING                                                           #
+        # ------------------------------------------------------------------ #
         elif game_state.state == "playing":
             player.step()
-            level.step()
+            #level.step()
+
+            for enemies in level.enemies:
+                enemies.step(target_pos = player.pos, speed = 1)
+  
 
         # -------------------------------------------------------------- #
-        #  Collision                                                     
+        #  Collision                                                     #
         # -------------------------------------------------------------- #
-        # TODO: Check collisions (shots vs enemies, enemies vs player)
+            # Check collisions obstacle und player
             for obstacle in level.obstacles:
                 if obstacle.collision(player.get_rect()):
                     player.hp -= 1
-                #elif obstacle.collision(Shot.get_rect()):
-                    #print("hit")
-            
-            # Collison enemies and player (player verliert hp, enemies verlieren hp und despawnen)
+
+                    player.random_upgrade()
+
+                    #Upgrade Text anzeigen 
+                    upgrade_font = pygame.font.SysFont(None, 30)
+                    upgrade_text = upgrade_font.render("Upgrade", True, (BLACK))
+                    screen.blit(upgrade_text, (SCREEN_WIDTH // 2 - upgrade_text.get_width() // 2, 10))
+                    pygame.display.flip()
+
+                # Enemy kann Obstacle nicht mehr überschreiten 
+                for enemies in level.enemies:
+                    if obstacle.collision(enemies.get_rect()):
+                        # Position um einen Schritt zurücksetzen
+                        direction = player.pos - enemies.pos
+                        if direction.length() > 0:
+                            direction = direction.normalize()
+                        enemies.pos -= direction * 1  # Einen Schritt zurück
+
+
+            # Collison enemies und player, enemies und shot(player verliert hp, enemies verlieren hp und despawnen)
             for enemies in level.enemies:
                 if not enemy.alive:
                     continue
@@ -140,8 +156,7 @@ def main():
                     enemies.hp -= 100
                     enemies.is_alive()
 
-
-        # TODO: Check player.hp <= 0 for death / game_state transition
+            # Check player.hp <= 0 for death / game_state transition
             if player.hp <= 0:
                 game_state.change_state("gameover")
 
@@ -150,34 +165,47 @@ def main():
         # -------------------------------------------------------------- #
             screen.fill(BLACK)
 
-        # Draw level background first
+            # Draw level background first
             level.draw(screen)
 
-            # TODO: Draw enemies
+            # Draw enemies
             for enemies in level.enemies:
                 enemies.draw(screen)
 
-            # TODO: Draw obstacles
+            # Draw obstacles
             for obstacle in level.obstacles:
                 obstacle.draw(screen)
 
             # Draw player (also draws its shots internally)
             player.draw(screen)
 
-        # Game Over Text anzeigen     
-        #screen.blit(text_image, (200, 250))
-
-        # TODO: Draw player HP (text or health bar)
+            # Draw player HP (text)
+            hp_font = pygame.font.SysFont(None, 30)
+            hp_text = hp_font.render(f"HP: {player.hp}", True, (WHITE))
+            screen.blit(hp_text, (10, 10))
 
             pygame.display.flip()
             clock.tick(FPS)
 
+        # ------------------------------------------------------------------ #
+        #  GAME OVER                                                         #
+        # ------------------------------------------------------------------ #
         elif game_state.state == "gameover":
             screen.fill(BLACK)
-            font = pygame.font.SysFont(None, 72)
-            text = font.render("Game Over!", True, (255, 255, 255))
-            screen.blit(text, (SCREEN_WIDTH // 2 - text.get_width() // 2, SCREEN_HEIGHT // 2))
+            gameover_font = pygame.font.SysFont(None, 72)
+            gameover_text = gameover_font.render("Game Over!", True, (WHITE))
+            screen.blit(gameover_text, (SCREEN_WIDTH // 2 - gameover_text.get_width() // 2, SCREEN_HEIGHT // 2))
             pygame.display.flip()
+
+        # ------------------------------------------------------------------ #
+        #  SHOP                                                              #
+        # ------------------------------------------------------------------ #
+        elif game_state == "shop":
+            screen.fill(BLACK)
+            shop_font = pygame.font.SysFont(None, 72)
+            shop_text = shop_font.render("Shop", True, (WHITE))
+            screen.blit(shop_text, (SCREEN_WIDTH // 2 - shop_text.get_width() // 2, 10))
+
 
     # ------------------------------------------------------------------ #
     #  Cleanup                                                           #

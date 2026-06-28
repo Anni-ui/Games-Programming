@@ -14,6 +14,7 @@ class Entity:
         self.pos = pygame.Vector2(0, 0)       # Position (center of sprite)
         self.dir = pygame.Vector2(0, 0)       # Velocity per frame
         self.hp = 0                           # Hit points
+        self.speed = 0
 
         self.hitbox_w = 0                     # Hitbox width
         self.hitbox_h = 0                     # Hitbox height

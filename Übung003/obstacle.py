@@ -19,9 +19,10 @@ class Obstacle(Entity):
         length: int = 0,
         color: tuple[int, int, int] = (255, 255, 255),
         width: int = 5,
-        upgrade: bool = False,
+        upgrade: bool = True,
         hitbox_h = 0,
-        hitbox_w = 0
+        hitbox_w = 0,
+        speed: int = 2
     ):
         self.track = track              # Which track (column) the obstacle is on
         self.duration_start = duration_start  # When it appears (in level duration)
@@ -31,11 +32,7 @@ class Obstacle(Entity):
         self.upgrade = upgrade          # upgrades for player 
         self.hitbox_h = hitbox_h        # hitbox height obstacles
         self.hitbox_w = hitbox_w        # hitbox width obstacles
-
-        #upgrade und funktion 
-        #if Obstacle(upgrade):
-        #    print("upgrade")
-        
+        self.speed = speed              # moving speed of obstacle 
             
         # Derived screen coordinates (students compute these from track layout)
         self.x1 = 0
@@ -43,8 +40,16 @@ class Obstacle(Entity):
         self.y1 = 0
         self.y2 = 0
     
+    # get Collider
     def collision(self, rect):
         if self.get_rect().colliderect(rect):
             return True
-        
-    obstacles = pygame.Rect(5, 5, 5, 5)
+
+    # Move down 
+    def step(self, speed):
+        self.pos.y += speed 
+
+    #obstacles = pygame.Rect(5, 5, 5, 5)
+
+    #if obstacles.update == True:
+    #    print ("HEY")

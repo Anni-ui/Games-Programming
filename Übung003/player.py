@@ -2,6 +2,7 @@
 # Player entity — follows mouse X, auto-fires shots.
 
 import pygame
+import random
 from entity import Entity
 from shot import Shot
 
@@ -61,7 +62,7 @@ class Player(Entity):
         mouse_x, _ = pygame.mouse.get_pos()
         self.pos.x = mouse_x
 
-         # Player Y follows mouse Y position
+        # Player Y follows mouse Y position
         _ , mouse_y = pygame.mouse.get_pos()
         self.pos.y = mouse_y
 
@@ -107,3 +108,19 @@ class Player(Entity):
             shot.draw(screen)
         # Draw player
         super().draw(screen)
+
+    # ------------------------------------------------------------------ #
+    #  upgrades random value from player                                 #
+    # ------------------------------------------------------------------ #
+    def random_upgrade(self):
+        choice = random.choice(["dmg", "cad", "shotspd"])
+
+        if choice == "dmg":
+            self.set_might(rng=self.rng, dmg=self.dmg + 5, cad=self.cad, shotspd=self.shotspd)
+            print("Upgrade: Schaden +5")
+        elif choice == "cad":
+            self.set_might(rng=self.rng, dmg=self.dmg, cad=max(1, self.cad - 2), shotspd=self.shotspd)
+            print("Upgrade: Feuerrate +")
+        elif choice == "shotspd":
+            self.set_might(rng=self.rng, dmg=self.dmg, cad=self.cad, shotspd=self.shotspd + 3)
+            print("Upgrade: Schussgeschwindigkeit +3")
