@@ -117,7 +117,6 @@ def main():
             for enemies in level.enemies:
                 enemies.step(target_pos = player.pos, speed = 1)
   
-
         # -------------------------------------------------------------- #
         #  Collision                                                     #
         # -------------------------------------------------------------- #

@@ -152,13 +152,16 @@ def main():
                     enemies.is_alive()
 
             # Collision enemies und shots 
-            for s in player.shots:
-                if enemies.collision(s.get_rect()):
-                    enemies.hp -= s.dmg                 # enemie verliert hp, je nach zugewiesenem Schadenswert des Shots
-                    enemies.is_alive()                  # checkt, ob enemie noch hp hat 
-                    s.life = 0                          # Schuss nach Treffer entfernen
-                    break
-
+            for enemies in level.enemies:                                # checkt für jeden Enemy
+                if not enemies.alive:                                    # checkt nicht, wenn der Enemy nicht mehr lebt
+                    continue
+                for s in player.shots:
+                    if enemies.collision(s.get_rect()):
+                        enemies.hp -= s.dmg                              # enemie verliert hp, je nach zugewiesenem Schadenswert des Shots
+                        enemies.is_alive()                               # checkt, ob enemie noch hp hat 
+                        s.life = 0                                       # Schuss nach Treffer entfernen
+                        break
+                    
             # Check player.hp <= 0 for death / game_state transition
             if player.hp <= 0:
                 game_state.change_state("gameover")
