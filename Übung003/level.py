@@ -29,7 +29,7 @@ class Level(Entity):
         self.num_tracks = 0                                              # Number of tracks (columns)
         self.duration = 0                                                # Level duration in frames
         self.music_name = ""                                             # Background music filename (not loaded)
-        self.pending_obstacles: list[Obstacle] = []                      # noch nicht gespawnte Obstacles 
+        self.frame_count = 0                                             # zählt dann die Frames 
 
 
         # Raw level data storage (2D array, matching C++ structure)
