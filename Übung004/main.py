@@ -151,6 +151,7 @@ def main():
                     player.hp -= 1                          
                     enemies.hp -= 5
                     enemies.is_alive()                                   # checkt, ob enemy noch lebt 
+                    points.bus.publish("player_hit")
 
             # Collision enemies und shots 
             for enemies in level.enemies:                                # checkt für jeden Enemy
@@ -160,12 +161,15 @@ def main():
                     if enemies.collision(s.get_rect()):
                         enemies.hp -= s.dmg                              # enemie verliert hp, je nach zugewiesenem Schadenswert des Shots
                         enemies.is_alive()                               # checkt, ob enemie noch hp hat 
+                        if not enemies.alive:
+                            points.bus.publish("enemy_died", enemy=enemies, points=10)
                         s.life = 0                                       # Schuss nach Treffer entfernen
                         break
 
             # Check player.hp <= 0 for death / game_state transition
             if player.hp <= 0:
-                #points.save_highscore()
+                points.add_score()
+                points.save_highscore(points.score)
                 game_state.change_state("gameover")
 
         # -------------------------------------------------------------- #
@@ -194,6 +198,11 @@ def main():
             hp_text = hp_font.render(f"HP: {player.hp}", True, (WHITE))
             screen.blit(hp_text, (10, 10))
 
+            # Draw Points 
+            point_font = pygame.font.SysFont(None, 30)
+            point_text = point_font.render(f"Points: {points.points}", True, (BLACK))
+            screen.blit(point_text, (100, 10))
+
             pygame.display.flip()
             clock.tick(FPS)
 
@@ -205,6 +214,12 @@ def main():
             gameover_font = pygame.font.SysFont(None, 72)
             gameover_text = gameover_font.render("Game Over!", True, (WHITE))
             screen.blit(gameover_text, (SCREEN_WIDTH // 2 - gameover_text.get_width() // 2, SCREEN_HEIGHT // 2))
+            
+            # Draw Highscore 
+            high_score_font = pygame.font.SysFont(None, 30)
+            high_score_text = high_score_font.render(f"Highscore: {points.points}", True, (WHITE))
+            screen.blit(high_score_text, (100, 10))            
+
             pygame.display.flip()
 
         # ------------------------------------------------------------------ #

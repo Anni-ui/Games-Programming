@@ -83,9 +83,10 @@ class Enemy(Entity):
     def is_alive(self) -> bool:
         """Return True if the enemy is alive. Once HP drops to 0,
         alive is permanently set to False (mirrors C++ behavior)."""
-        if self.hp <= 0:
+        if self.hp <= 0 and self.alive:
             self.alive = False
+            self.die()
         return self.alive
     
     def die(self):
-        bus.publish("enemy_died", enemy=self, points=self.points)
+        bus.publish("enemy_died", enemy=self, points=10)
