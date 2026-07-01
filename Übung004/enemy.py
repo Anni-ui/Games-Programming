@@ -2,8 +2,10 @@
 # STUBBED enemy class. Students will implement AI, drawing, and collision.
 
 import pygame
+from eventBus import EventBus
 from entity import Entity
 
+bus = EventBus()
 
 class Enemy(Entity):
     """STUB: Enemy entity. Has fields but no real behavior yet.
@@ -52,11 +54,9 @@ class Enemy(Entity):
         The C++ version computes the vector but doesn't apply it.
         Students should implement actual movement here."""
         if self.alive:
-            # Calculate direction toward target (not applied — stub)
-            direction = target_pos - self.pos
-            # TODO: Normalize direction, apply speed, move toward target
+            direction = target_pos - self.pos                             # Calculate direction toward target (not applied — stub)
             if direction.length() > 0:
-                direction = direction.normalize()
+                direction = direction.normalize()                         # Normalize direction, apply speed, move toward target
 
             self.pos += direction * speed 
 
@@ -86,3 +86,6 @@ class Enemy(Entity):
         if self.hp <= 0:
             self.alive = False
         return self.alive
+    
+    def die(self):
+        bus.publish("enemy_died", enemy=self, points=self.points)

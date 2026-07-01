@@ -17,6 +17,7 @@ from player import Player
 from level import Level
 from shot import Shot
 from enemy import Enemy
+from points import Points 
 
 
 def main():
@@ -41,9 +42,10 @@ def main():
         anim_speed=1,
         hp=100,
     )
-    player.set_might(rng=1000,dmg=10, cad=10, shotspd=10)
+    player.set_might(rng=1000,dmg=5, cad=30, shotspd=5)
 
     shot = Shot()
+    points = Points()
 
     enemy = Enemy()
     enemy.setup(
@@ -61,7 +63,6 @@ def main():
     level.load("lvl001.rfg")
 
     game_state = Game()     
-    
 
     # ------------------------------------------------------------------ #
     #  Game loop                                                         #
@@ -109,6 +110,7 @@ def main():
         #  PLAYING                                                           #
         # ------------------------------------------------------------------ #
         elif game_state.state == "playing":
+            #points.load_highscore()
             player.step()
             level.step()
 
@@ -134,33 +136,37 @@ def main():
                 # Enemy kann Obstacle nicht mehr überschreiten 
                 for enemies in level.enemies:
                     if obstacle.collision(enemies.get_rect()):
-                        # Position um einen Schritt zurücksetzen
+                                                                         # Position um einen Schritt zurücksetzen
                         direction = player.pos - enemies.pos
                         if direction.length() > 0:
                             direction = direction.normalize()
-                        enemies.pos -= direction * 1  # Einen Schritt zurück
+                        enemies.pos -= direction * 1                     # Einen Schritt zurück
 
 
             # Collison enemies und player(player verliert hp, enemies verlieren hp und despawnen)
-            for enemies in level.enemies:
-                if not enemy.alive:
+            for enemies in level.enemies:                                # checkt für jeden Enemy
+                if not enemies.alive:                                    # checkt nicht, wenn der Enemy nicht mehr lebt 
                     continue
-
-                if enemies.collision(player.get_rect()):
-                    player.hp -= 1
+ 
+                if enemies.collision(player.get_rect()):                 # Collision enemy und player
+                    player.hp -= 1                          
                     enemies.hp -= 5
-                    enemies.is_alive()
+                    enemies.is_alive()                                   # checkt, ob enemy noch lebt 
 
             # Collision enemies und shots 
-            for s in player.shots:
-                if enemies.collision(s.get_rect()):
-                    enemies.hp -= s.dmg                 # enemie verliert hp, je nach zugewiesenem Schadenswert des Shots
-                    enemies.is_alive()                  # checkt, ob enemie noch hp hat 
-                    s.life = 0                          # Schuss nach Treffer entfernen
-                    break
+            for enemies in level.enemies:                                # checkt für jeden Enemy
+                if not enemies.alive:                                    # checkt nicht, wenn der Enemy nicht mehr lebt
+                    continue
+                for s in player.shots:
+                    if enemies.collision(s.get_rect()):
+                        enemies.hp -= s.dmg                              # enemie verliert hp, je nach zugewiesenem Schadenswert des Shots
+                        enemies.is_alive()                               # checkt, ob enemie noch hp hat 
+                        s.life = 0                                       # Schuss nach Treffer entfernen
+                        break
 
             # Check player.hp <= 0 for death / game_state transition
             if player.hp <= 0:
+                #points.save_highscore()
                 game_state.change_state("gameover")
 
         # -------------------------------------------------------------- #
