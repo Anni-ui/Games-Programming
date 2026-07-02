@@ -5,6 +5,7 @@ import pygame
 import random
 from entity import Entity
 from shot import Shot
+from points import Points
 
 
 class Player(Entity):
@@ -109,7 +110,7 @@ class Player(Entity):
     #  upgrades random value from player                                 #
     # ------------------------------------------------------------------ #
     def random_upgrade(self):
-        choice = random.choice(["dmg", "cad", "shotspd"])
+        choice = random.choice(["dmg", "cad", "shotspd", "Trümmer"])
 
         if choice == "dmg":
             self.set_might(rng=self.rng, dmg=self.dmg + 5, cad=self.cad, shotspd=self.shotspd)
@@ -120,3 +121,7 @@ class Player(Entity):
         elif choice == "shotspd":
             self.set_might(rng=self.rng, dmg=self.dmg, cad=self.cad, shotspd=self.shotspd + 3)
             print("Upgrade: Schussgeschwindigkeit +3")
+        elif choice == "Trümmer":
+            points = Points()
+            points += 1
+            print("Upgrade: Trümmer + 1")

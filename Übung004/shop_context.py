@@ -12,10 +12,11 @@ class ShopContext(Context):
     #  Event                                                         #
     # -------------------------------------------------------------- #
     def handle_event(self, event):
-        if event.type == MOUSEBUTTONDOWN:
-            self.try_buy(event.pos)
-        elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-            self.game.pop()
+        for event in pygame.event.get():
+            if event.type == MOUSEBUTTONDOWN:
+                self.try_buy(event.pos)
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                self.game.pop()
 
     # -------------------------------------------------------------- #
     # buy                                                            #
@@ -33,5 +34,9 @@ class ShopContext(Context):
     #  Draw                                                          #
     # -------------------------------------------------------------- #
     def draw(self, screen):
+            transparent_bg = pygame.Surface((600, 800), pygame.SRCALPHA)
+            transparent_bg.fill((0, 0, 255, 100))
+
             shop_text = self.shop_font.render("Shop", True, (WHITE))
+            screen.blit(transparent_bg, (0, 0))
             screen.blit(shop_text, (SCREEN_WIDTH // 2 - shop_text.get_width() // 2, 10))

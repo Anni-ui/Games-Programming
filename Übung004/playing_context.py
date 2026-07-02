@@ -62,7 +62,14 @@ class PlayingContext(Context):
             self.points.save_highscore(self.points.score)
             from gameover_context import GameOverContext
             self.game.replace(GameOverContext(self.game, self.points))
-            
+
+    # -------------------------------------------------------------- #
+    #  Event                                                         #
+    # -------------------------------------------------------------- #    
+    def handle_event(self, event):
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_b:
+            from shop_context import ShopContext
+            self.game.push(ShopContext(self.game))       
   
     # -------------------------------------------------------------- #
     #  Collision                                                     #

@@ -6,7 +6,7 @@ import pygame
 class Context:
  
     def __init__(self, game):
-        self.game = game  # Referenz zurück auf Game, für push()/pop()/replace()
+        self.game = game                                                # Referenz zurück auf Game, für push()/pop()/replace()
  
     def handle_event(self, event):
         pass
