@@ -11,6 +11,7 @@ FPS = 60
 # Colors
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
+RED = (255, 0, 0)
 
 # Asset path (relative to main.py)
 ASSET_DIR = os.path.join(os.path.dirname(__file__), "assets")

@@ -1,4 +1,4 @@
-# Points
+# Points & Währung (Trümmer)
 #Points are stored and compared to set the highscore
 
 import json
@@ -9,6 +9,7 @@ class Points:
         self.points: int = 0
         self.combo_hit: int = 0
         self.score: int = (self.load_highscore() or 0)
+        self.trümmer: int = 0
     
         self.bus = EventBus()
         self.bus.subscribe("enemy_died", self._on_enemy_died)
@@ -23,9 +24,10 @@ class Points:
     # -------------------------------------------------------------- #
     #  Highscore speichern                                           #
     # -------------------------------------------------------------- #   
-    def _on_enemy_died(self, enemy=None, points=0):
+    def _on_enemy_died(self, enemy=None, points=0, trümmer=0):
         self.points += self.combo_level()                              # Punkte steigen, um das Combo Level 
         self.combo_hit += 1   
+        self.trümmer += 1
 
     # -------------------------------------------------------------- #
     #  Highscore speichern                                           #
