@@ -6,7 +6,7 @@ from player import Player
 from level import Level
 from enemy import Enemy
 from points import Points 
-from shot_enemy import ShotEnemy
+from shooting_enemy import ShotEnemy
 
 class PlayingContext(Context):
     def __init__(self, game):
@@ -102,13 +102,13 @@ class PlayingContext(Context):
         for enemies in self.level.enemies:                           # checkt für jeden Enemy
             if not enemies.alive:                                    # checkt nicht, wenn der Enemy nicht mehr lebt
                 continue
-            for s in self.player.shots:
-                if enemies.collision(s.get_rect()):
-                    enemies.hp -= s.dmg                              # enemie verliert hp, je nach zugewiesenem Schadenswert des Shots
+            for shot in self.player.shots:
+                if enemies.collision(shot.get_rect()):
+                    enemies.hp -= shot.dmg                              # enemie verliert hp, je nach zugewiesenem Schadenswert des Shots
                     enemies.is_alive()                               # checkt, ob enemie noch hp hat 
                     if not enemies.alive:
                         self.points.bus.publish("enemy_died", enemy=enemies, points=10, trümmer=10)
-                    s.life = 0                                       # Schuss nach Treffer entfernen
+                    shot.life = 0                                       # Schuss nach Treffer entfernen
                     break
 
     # -------------------------------------------------------------- #
