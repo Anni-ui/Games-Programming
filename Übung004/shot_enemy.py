@@ -34,7 +34,18 @@ class ShotEnemy(Enemy):
         super().setup(x, y, dx, dy, image_prefix, anim_speed, hp, damage, speed)
 
     # ------------------------------------------------------------------ #
-    #  step — STUB: calculates direction toward target but doesn't move  #
+    #  set_might — configure weapon stats (mirrors C++ setMight)         #
+    # ------------------------------------------------------------------ #
+    def set_might(self, rng: int, dmg: int, cad: int, shotspd: int):
+        """Configure weapon stats. Called from main after setup."""
+        self.rng = rng
+        self.dmg = dmg
+        self.cad = cad
+        self.shotspd = shotspd
+        self._cad_counter = cad
+
+    # ------------------------------------------------------------------ #
+    #  step — STUB: calculates direction toward target                   #
     # ------------------------------------------------------------------ #
     def step(self, target_pos: pygame.Vector2):
         """STUB: Calculate direction toward target.
@@ -46,10 +57,6 @@ class ShotEnemy(Enemy):
                 direction = direction.normalize()                        # Normalize direction
 
             self.pos += direction * self.speed                           # bewegung in richtung des Ziels mit der Geschwindigkeit multipliziert 
-
-        """Per-frame update: move, fire when cadence allows, update shots."""
-        # Move by direction (in case dir is set)
-        super().step()
 
         # Cadence countdown — fire a shot when it reaches 0
         self._cad_counter -= 1
@@ -65,7 +72,7 @@ class ShotEnemy(Enemy):
         self.shots = [s for s in self.shots if s.is_alive()]
 
     # ------------------------------------------------------------------ #
-    #  create_shot — spawn a new shot above the player                   #
+    #  create_shot — spawn a new shot below Enemy                        #
     # ------------------------------------------------------------------ #
     def create_shot(self):
         """Create a shot 10px above the player, moving upward."""
@@ -74,7 +81,7 @@ class ShotEnemy(Enemy):
             x=self.pos.x,
             y=self.pos.y + 10,      # 10 px unter dem enemy 
             dx=0,
-            dy=+self.shotspd,        # Moving downward (positiv Y)
+            dy= self.shotspd,        # Moving downward (positiv Y)
             image_prefix="Shot",
             anim_speed=1,
             hp=1,
@@ -82,3 +89,14 @@ class ShotEnemy(Enemy):
             dmg=self.dmg,
         )
         self.shots.append(shot)
+
+    # ------------------------------------------------------------------ #
+    #  Draw Enemy and all Shots                                          #
+    # ------------------------------------------------------------------ #
+    def draw(self, screen: pygame.Surface):
+        """Draw the player and all active shots."""
+        # Draw shots first (behind player)
+        for shot in self.shots:
+            shot.draw(screen)
+        # Draw player
+        super().draw(screen)

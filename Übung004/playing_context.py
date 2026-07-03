@@ -6,6 +6,7 @@ from player import Player
 from level import Level
 from enemy import Enemy
 from points import Points 
+from shot_enemy import ShotEnemy
 
 class PlayingContext(Context):
     def __init__(self, game):
@@ -21,11 +22,16 @@ class PlayingContext(Context):
             anim_speed=1,
             hp=100,
         )
-        self.player.set_might(rng=1000,dmg=5, cad=30, shotspd=5)
-
+        
+        
         self.points = Points()
 
         self.enemy = Enemy()
+        self.shot_enemy = ShotEnemy()
+
+        self.player.set_might(rng=1000,dmg=5, cad=30, shotspd=5)
+        self.shot_enemy.set_might(rng=50, dmg=5, cad=30, shotspd=5)
+
 
         self.level = Level()
         self.level.load("lvl001.rfg")
