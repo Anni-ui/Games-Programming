@@ -26,16 +26,6 @@ class PlayingContext(Context):
         self.points = Points()
 
         self.enemy = Enemy()
-        self.enemy.setup(
-            x=SCREEN_WIDTH // 2,
-            y=20 ,
-            dx=0,
-            dy=0,
-            image_prefix="enemy",
-            anim_speed=1,
-            hp=10,
-            damage=1
-        )
 
         self.level = Level()
         self.level.load("lvl001.rfg")
@@ -52,7 +42,7 @@ class PlayingContext(Context):
         self.level.step()
 
         for enemies in self.level.enemies:
-            enemies.step(target_pos = self.player.pos, speed = 1)
+            enemies.step(target_pos = self.player.pos)
         
         self.handle_collision()
 

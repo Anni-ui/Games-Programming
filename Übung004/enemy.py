@@ -19,10 +19,10 @@ class Enemy(Entity):
 
     def __init__(self):
         super().__init__()
-        self.damage = 0             # Damage dealt to player on contact
-        self.starting_point = 0     # Spawn frame (when in the level duration)
-        self.ready = False          # Whether the enemy has been activated
-        self.alive = True           # Whether the enemy is still alive
+        self.damage = 0                                                  # Damage dealt to player on contact
+        self.starting_point = 0                                          # Spawn frame (when in the level duration)
+        self.ready = False                                               # Whether the enemy has been activated
+        self.alive = True                                                # Whether the enemy is still alive
 
     # ------------------------------------------------------------------ #
     #  setup — initialize enemy (extends Entity.setup)                   #
@@ -49,16 +49,16 @@ class Enemy(Entity):
     # ------------------------------------------------------------------ #
     #  step — STUB: calculates direction toward target but doesn't move  #
     # ------------------------------------------------------------------ #
-    def step(self, target_pos: pygame.Vector2, speed):
+    def step(self, target_pos: pygame.Vector2):
         """STUB: Calculate direction toward target.
         The C++ version computes the vector but doesn't apply it.
         Students should implement actual movement here."""
         if self.alive:
-            direction = target_pos - self.pos                             # Calculate direction toward target (not applied — stub)
+            direction = target_pos - self.pos                            # Calculate direction toward target (not applied — stub)
             if direction.length() > 0:
-                direction = direction.normalize()                         # Normalize direction, apply speed, move toward target
+                direction = direction.normalize()                        # Normalize direction
 
-            self.pos += direction * speed 
+            self.pos += direction * self.speed                                # bewegung in richtung des Ziels mit der Geschwindigkeit multipliziert 
 
 
     # ------------------------------------------------------------------ #

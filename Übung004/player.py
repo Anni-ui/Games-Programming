@@ -123,5 +123,5 @@ class Player(Entity):
             print("Upgrade: Schussgeschwindigkeit +3")
         elif choice == "Trümmer":
             points = Points()
-            points += 1
+            points.points += 1
             print("Upgrade: Trümmer + 1")

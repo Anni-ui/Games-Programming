@@ -7,9 +7,20 @@ import re
 import pygame
 from entity import Entity
 from enemy import Enemy
+from fast_enemy import FastEnemy
+from tank_enemy import TankEnemy
+from shot_enemy import ShotEnemy
 from obstacle import Obstacle
 from settings import ASSET_DIR, SCREEN_WIDTH, SCREEN_HEIGHT
 
+
+ENEMY_TYPES: dict[str, type[Enemy]] = {
+    "normal": Enemy,
+    "fast": FastEnemy,
+    "tank": TankEnemy,
+    "shot": ShotEnemy
+
+}
 
 class Level(Entity):
     """Loads and manages a level from a .rfg file.
@@ -165,7 +176,14 @@ class Level(Entity):
         count = int(self._parse_param(line, "N") or 1)
         track = int(self._parse_param(line, "T") or 0)
         position = int(self._parse_param(line, "P") or 0)
+        klasse = (self._parse_param(line, "K") or "normal").lower()
+        enemy_cls = ENEMY_TYPES.get(klasse)
         
+
+        if enemy_cls is None:
+            print(f"Warning: unbekannter Enemy-Typ '{klasse}', benutze Enemy")
+            enemy_cls = Enemy
+
         if self.num_tracks > 0:
             track_width = SCREEN_WIDTH // self.num_tracks
             spawn_x = track_width * (track + 1)
@@ -177,7 +195,7 @@ class Level(Entity):
 
         # create and store Enemy objects here
         for i in range(count):
-            enemy = Enemy()
+            enemy = enemy_cls()
             enemy.setup(
                 x=spawn_x,
                 y=spawn_y, dx=0, dy=0,
