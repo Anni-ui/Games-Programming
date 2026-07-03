@@ -9,7 +9,7 @@ from entity import Entity
 from enemy import Enemy
 from fast_enemy import FastEnemy
 from tank_enemy import TankEnemy
-from shot_enemy import ShotEnemy
+from shooting_enemy import ShotEnemy
 from obstacle import Obstacle
 from settings import ASSET_DIR, SCREEN_WIDTH, SCREEN_HEIGHT
 
@@ -18,7 +18,7 @@ ENEMY_TYPES: dict[str, type[Enemy]] = {
     "normal": Enemy,
     "fast": FastEnemy,
     "tank": TankEnemy,
-    "shot": ShotEnemy
+    "shooting": ShotEnemy
 
 }
 

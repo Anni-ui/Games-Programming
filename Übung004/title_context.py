@@ -2,7 +2,7 @@
 
 import pygame
 from game import Context
-from settings import SCREEN_WIDTH, SCREEN_HEIGHT, BLACK
+from settings import SCREEN_WIDTH, SCREEN_HEIGHT, BLACK, BLUE
 
 class TitleContext(Context):
     def __init__(self, game):
@@ -22,7 +22,7 @@ class TitleContext(Context):
     #  Draw                                                              #
     # ------------------------------------------------------------------ #
     def draw(self, screen):
-        screen.fill(BLACK)
+        screen.fill(BLUE)
         title_text = self.title_font.render("Shooty^^", True, (255, 255, 255))
         hint_text = self.hint_font.render("Press E to play", True, (200, 200, 200))
            
