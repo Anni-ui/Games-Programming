@@ -57,7 +57,7 @@ class PlayingContext(Context):
     #  Event                                                         #
     # -------------------------------------------------------------- #    
     def handle_event(self, event):
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_b:
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_e:
             from shop_context import ShopContext
             self.game.push(ShopContext(self.game))       
   

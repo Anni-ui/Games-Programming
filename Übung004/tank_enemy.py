@@ -19,9 +19,4 @@ class TankEnemy(Enemy):
         speed: int = 1
         ):
         """Initialize enemy with position, images, and damage."""
-        super().setup(x, y, dx, dy, image_prefix, anim_speed)
-        self.damage = damage
-        self.ready = False
-        self.alive = True
-        self.speed = speed 
-        self.hp = hp
+        super().setup(x, y, dx, dy, image_prefix, anim_speed, hp, damage, speed)

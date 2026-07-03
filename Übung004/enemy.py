@@ -58,7 +58,7 @@ class Enemy(Entity):
             if direction.length() > 0:
                 direction = direction.normalize()                        # Normalize direction
 
-            self.pos += direction * self.speed                                # bewegung in richtung des Ziels mit der Geschwindigkeit multipliziert 
+            self.pos += direction * self.speed                           # bewegung in richtung des Ziels mit der Geschwindigkeit multipliziert 
 
 
     # ------------------------------------------------------------------ #

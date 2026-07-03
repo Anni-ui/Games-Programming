@@ -200,8 +200,7 @@ class Level(Entity):
                 x=spawn_x,
                 y=spawn_y, dx=0, dy=0,
                 image_prefix=anim_prefix,
-                anim_speed=0,
-                hp=10
+                anim_speed=0
             )
 
             # Enemy spezifische Werte direkt setzen 
