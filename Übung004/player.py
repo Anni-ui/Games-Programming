@@ -96,6 +96,12 @@ class Player(Entity):
         self.shots.append(shot)
 
     # ------------------------------------------------------------------ #
+    #  gets rect for collision                                           #
+    # ------------------------------------------------------------------ #
+    def collision(self, rect):
+        return self.get_rect().colliderect(rect)
+
+    # ------------------------------------------------------------------ #
     #  draw — draw player and all shots                                  #
     # ------------------------------------------------------------------ #
     def draw(self, screen: pygame.Surface):

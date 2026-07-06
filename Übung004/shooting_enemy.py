@@ -1,18 +1,18 @@
 # Enemy für Level 3 (schießt zurück)
 import pygame
 from enemy import Enemy
-from shot import Shot
+from enemy_shot import EnemyShot
 
 class ShotEnemy(Enemy):
     def __init__(self):
         super().__init__()
-        self.shots: list[Shot] = []   # Active shots
+        self.shots: list[EnemyShot] = []   # Active shots
 
         # Weapon stats (matching C++ defaults)
-        self.rng = 100                                                   # Shot range in frames
+        self.rng = 300                                                   # Shot range in frames
         self.dmg = 1                                                     # Damage per shot
         self.cad = 50                                                    # Cadence: frames between shots
-        self.shotspd = 1                                                 # Shot speed (pixels per frame, upward)
+        self.shotspd = 5                                                 # Shot speed (pixels per frame, upward)
 
         self._cad_counter = 0                                            # Countdown to next shot
     # ------------------------------------------------------------------ #
@@ -26,9 +26,9 @@ class ShotEnemy(Enemy):
         dy: float,
         image_prefix: str,
         anim_speed: int,
-        hp: int = 10,
+        hp: int = 20,
         damage: int = 1,
-        speed: int = 1
+        speed: float = 0.5
         ):
         """Initialize enemy with position, images, and damage."""
         super().setup(x, y, dx, dy, image_prefix, anim_speed, hp, damage, speed)
@@ -76,13 +76,13 @@ class ShotEnemy(Enemy):
     # ------------------------------------------------------------------ #
     def create_shot(self):
         """Create a shot 10px above the player, moving upward."""
-        shot = Shot()
+        shot = EnemyShot()
         shot.setup(
             x=self.pos.x,
             y=self.pos.y + 10,      # 10 px unter dem enemy 
             dx=0,
             dy= self.shotspd,        # Moving downward (positiv Y)
-            image_prefix="Shot",
+            image_prefix="EnemyShot",
             anim_speed=1,
             hp=1,
             rng=self.rng,
@@ -94,9 +94,10 @@ class ShotEnemy(Enemy):
     #  Draw Enemy and all Shots                                          #
     # ------------------------------------------------------------------ #
     def draw(self, screen: pygame.Surface):
-        """Draw the player and all active shots."""
-        # Draw shots first (behind player)
-        for shot in self.shots:
-            shot.draw(screen)
-        # Draw player
-        super().draw(screen)
+        """Draw the Enemy and all active shots."""
+        # Draw shots first (behind Enemy)
+        if self.alive:
+            for shot in self.shots:
+                shot.draw(screen)
+            # Draw Enemy
+            super().draw(screen)

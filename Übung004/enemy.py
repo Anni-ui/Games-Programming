@@ -37,7 +37,7 @@ class Enemy(Entity):
         anim_speed: int,
         hp: int,
         damage: int = 1,
-        speed: int = 1
+        speed: float = 1
     ):
         """Initialize enemy with position, images, and damage."""
         super().setup(x, y, dx, dy, image_prefix, anim_speed, hp)

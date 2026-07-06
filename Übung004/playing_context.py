@@ -7,6 +7,7 @@ from level import Level
 from enemy import Enemy
 from points import Points 
 from shooting_enemy import ShotEnemy
+from enemy_shot import EnemyShot
 
 class PlayingContext(Context):
     def __init__(self, game):
@@ -27,10 +28,8 @@ class PlayingContext(Context):
         self.points = Points()
 
         self.enemy = Enemy()
-        self.shot_enemy = ShotEnemy()
 
         self.player.set_might(rng=1000,dmg=5, cad=30, shotspd=5)
-        self.shot_enemy.set_might(rng=50, dmg=5, cad=30, shotspd=5)
 
 
         self.level = Level()
@@ -79,7 +78,7 @@ class PlayingContext(Context):
 
             # Enemy kann Obstacle nicht mehr überschreiten 
             for enemies in self.level.enemies:
-                if obstacle.collision(enemies.get_rect()):
+                if obstacle.active and obstacle.collision(enemies.get_rect()):
                                                                      # Position um einen Schritt zurücksetzen
                     direction = self.player.pos - enemies.pos
                     if direction.length() > 0:
@@ -96,6 +95,8 @@ class PlayingContext(Context):
                 self.player.hp -= 1                          
                 enemies.hp -= 5
                 enemies.is_alive()                                   # checkt, ob enemy noch lebt 
+                if not enemies.alive:
+                    self.points.bus.publish("enemy_died", enemy=enemies, points=10, trümmer=10)
                 self.points.bus.publish("player_hit")
 
         # Collision enemies und shots 
@@ -104,12 +105,20 @@ class PlayingContext(Context):
                 continue
             for shot in self.player.shots:
                 if enemies.collision(shot.get_rect()):
-                    enemies.hp -= shot.dmg                              # enemie verliert hp, je nach zugewiesenem Schadenswert des Shots
+                    enemies.hp -= shot.dmg                           # enemie verliert hp, je nach zugewiesenem Schadenswert des Shots
                     enemies.is_alive()                               # checkt, ob enemie noch hp hat 
                     if not enemies.alive:
                         self.points.bus.publish("enemy_died", enemy=enemies, points=10, trümmer=10)
-                    shot.life = 0                                       # Schuss nach Treffer entfernen
+                    shot.life = 0                                    # Schuss nach Treffer entfernen
                     break
+            
+            # Collision enemy shots und Player
+            if isinstance(enemies, ShotEnemy):
+                for shot in enemies.shots:
+                    if self.player.collision(shot.get_rect()):
+                        self.player.hp -= shot.dmg
+                        shot.life = 0
+                        break
 
     # -------------------------------------------------------------- #
     # Draw                                                           #

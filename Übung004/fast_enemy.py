@@ -16,7 +16,7 @@ class FastEnemy(Enemy):
         anim_speed: int,
         hp: int = 10,
         damage: int = 1,
-        speed: int = 3
+        speed: float = 3
         ):
         """Initialize enemy with position, images, and damage."""
         super().setup(x, y, dx, dy, image_prefix, anim_speed, hp, damage, speed)
