@@ -35,7 +35,7 @@ class Enemy(Entity):
         dy: float,
         image_prefix: str,
         anim_speed: int,
-        hp: int,
+        hp: int = 10,
         damage: int = 1,
         speed: float = 1
     ):

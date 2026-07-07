@@ -1,7 +1,7 @@
 # Playing Klasse 
 import pygame  
 from game import Context
-from settings import SCREEN_HEIGHT, SCREEN_WIDTH, BLACK, RED
+from settings import SCREEN_HEIGHT, SCREEN_WIDTH, BLACK, RED, WHITE
 from player import Player
 from level import Level
 from enemy import Enemy
@@ -55,8 +55,8 @@ class PlayingContext(Context):
         if self.player.hp <= 0:
             self.points.add_score()
             self.points.save_highscore(self.points.score)
-            from gameover_context import GameOverContext
-            self.game.replace(GameOverContext(self.game, self.points))
+            from gameover_context import GameOver
+            self.game.replace(GameOver(self.game, self.points))
 
     # -------------------------------------------------------------- #
     #  Event                                                         #
@@ -147,11 +147,11 @@ class PlayingContext(Context):
         screen.blit(hp_text, (10, 10))
 
         # Draw Points 
-        point_text = self.point_font.render(f"Points: {self.points.points}", True, (BLACK))
+        point_text = self.point_font.render(f"Points: {self.points.points}", True, (WHITE))
         screen.blit(point_text, (100, 10))
 
         # Draw Points 
-        trümmer_text = self.trümmer_font.render(f"Trümmer: {self.points.trümmer}", True, (BLACK))
+        trümmer_text = self.trümmer_font.render(f"Trümmer: {self.points.trümmer}", True, (WHITE))
         screen.blit(trümmer_text, (10, 770))
 
     #def handle_event(self, e):

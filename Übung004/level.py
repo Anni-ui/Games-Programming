@@ -10,6 +10,7 @@ from enemy import Enemy
 from fast_enemy import FastEnemy
 from tank_enemy import TankEnemy
 from shooting_enemy import ShotEnemy
+from shooting_boss import ShotBoss
 from obstacle import Obstacle
 from settings import ASSET_DIR, SCREEN_WIDTH, SCREEN_HEIGHT
 
@@ -18,8 +19,8 @@ ENEMY_TYPES: dict[str, type[Enemy]] = {
     "normal": Enemy,
     "fast": FastEnemy,
     "tank": TankEnemy,
-    "shooting": ShotEnemy
-
+    "shooting": ShotEnemy,
+    "shooting_boss": ShotBoss
 }
 
 class Level(Entity):
@@ -81,10 +82,18 @@ class Level(Entity):
     # ------------------------------------------------------------------ #
     def step(self):
         self.frame_count += 1                                            # zählt jeden Frame einen hoch 
+
+            # Background nach unten scrollen
+        scroll_speed = 1.5   # Pixel pro Frame – kannst du frei anpassen
+
+        if self.background_image:
+            image_height = self.background_image.get_height()
+            self.pos.y = (self.pos.y + scroll_speed) % image_height
+        
         # Prüfen, ob Enemies aus der Warteliste fällig sind
         still_pending_enemies = []                                       # wartende Liste
         for enemy in self.pending_enemies:
-            if self.frame_count >= enemy.spawn_frame:                    # prüft, ob Obstacles gespawnt werden sollen 
+            if self.frame_count >= enemy.spawn_frame:                    # prüft, ob Enemy gespawnt werden sollen 
                 self.enemies.append(enemy)                               # packt sie in die Liste zum spawnen 
             else:
                 still_pending_enemies.append(enemy)                      # falls sie noch nicht gespawnt werden sollen, gelangen sie in die wartende Liste 
@@ -108,8 +117,17 @@ class Level(Entity):
     # ------------------------------------------------------------------ #
     def draw(self, screen: pygame.Surface):
         """Draw the background image at the level's position."""
-        if self.background_image:
-            screen.blit(self.background_image, (int(self.pos.x), int(self.pos.y)))
+        if self.background_image: 
+            image_height = self.background_image.get_height()
+            offset = self.pos.y % image_height
+
+            y = offset - image_height   # erste Kopie startet oberhalb vom Screen
+            while y < SCREEN_HEIGHT:
+                screen.blit(self.background_image, (int(self.pos.x), int(y)))
+                y += image_height
+
+            #screen.blit(self.background_image, (int(self.pos.x), int(self.pos.y)))
+            #screen.blit(self.background_image, (int(self.pos.x), int(self.pos.y) - image_height))
 
     # ================================================================== #
     #  Private parsing helpers                                           #

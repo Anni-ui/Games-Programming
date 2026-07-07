@@ -82,7 +82,7 @@ class ShotEnemy(Enemy):
             y=self.pos.y + 10,      # 10 px unter dem enemy 
             dx=0,
             dy= self.shotspd,        # Moving downward (positiv Y)
-            image_prefix="EnemyShot",
+            image_prefix="shoot_enemy",
             anim_speed=1,
             hp=1,
             rng=self.rng,
