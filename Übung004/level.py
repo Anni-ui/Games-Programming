@@ -37,6 +37,7 @@ class Level(Entity):
         self.obstacles: list[Obstacle] = []                              # bereits gespawnte Obstacles 
         self.pending_obstacles: list[Obstacle] = []                      # noch nicht gespawnte Obstacles 
         self.background_image: pygame.Surface | None = None
+        self.boss : Enemy | None = None 
 
         self.num_tracks = 0                                              # Number of tracks (columns)
         self.duration = 0                                                # Level duration in frames
@@ -195,6 +196,7 @@ class Level(Entity):
         track = int(self._parse_param(line, "T") or 0)
         position = int(self._parse_param(line, "P") or 0)
         klasse = (self._parse_param(line, "K") or "normal").lower()
+        is_boss = self._parse_param(line, "B") == "1" 
         enemy_cls = ENEMY_TYPES.get(klasse)
         
 
@@ -228,8 +230,12 @@ class Level(Entity):
             enemy.track = track
             enemy.position = position 
             enemy.spawn_frame = position + i * spawn_stagger             # legt den Spawnframe fest 
+            enemy.is_boss = is_boss
 
             self.pending_enemies.append(enemy)
+
+            if is_boss:                                          
+                self.boss = enemy
 
     # ------------------------------------------------------------------ #
     # Obstacle                                                           #

@@ -47,11 +47,11 @@
 # "W": Describes the pixel width.
 
 
-L T(2) B(Blue_Nebula_02-1024x1024.png) M(Backgnd001music) D(2000)
+L T(2) B(Purple_Nebula_04-1024x1024.png) M(Backgnd001music) D(2000)
 
 E D(1) S(3) A(shooting_boss) N(1) T(0) P(500) K(shooting_boss) B(1)
 
-E D(1) S(3) A(enemy) N(5) T(0) P(10) K(tank)
+E D(1) S(3) A(shooting_enemy) N(5) T(0) P(10) K(shooting)
 
 O T(0) D(0) A(obstacle) L(100) C(35,56,90) W(5)
 

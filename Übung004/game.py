@@ -21,6 +21,30 @@ class Game:
 
     def __init__(self):
         self.stack = []
+        self.level_index = 0
+
+    # -------------------------------------------------------------- #
+    #  nächstes Level                                                #
+    # -------------------------------------------------------------- # 
+    def next_level(self):
+        self.level_index += 1
+        from playing_context import LEVEL                            # lokal importieren, um zirkuläre Imports zu vermeiden
+        if self.level_index >= len(LEVEL):
+            self.level_index = 0            
+            return False
+        return True
+    
+        #self.points.add_score()
+        #self.points.save_highscore(self.points.score)
+        #from gameover_context import GameOver
+        #self.game.replace(GameOver(self.game, self.points))  
+        #current_level = LEVEL[index_nummer]
+
+    # ------------------------------------------------------------------ #
+    #  erstes Level                                                      #
+    # ------------------------------------------------------------------ # 
+    def reset_level(self):
+        self.level_index = 0
 
     # ------------------------------------------------------------------ #
     #  legt neue Ebene oben drauf                                        #

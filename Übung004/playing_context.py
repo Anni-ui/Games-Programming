@@ -7,16 +7,21 @@ from level import Level
 from enemy import Enemy
 from points import Points 
 from shooting_enemy import ShotEnemy
-from enemy_shot import EnemyShot
 
+LEVEL: list[str] = [
+    "lvl001.rfg",
+    "lvl002.rfg",
+    "lvl003.rfg"
+]
+ 
 class PlayingContext(Context):
-    def __init__(self, game):
+    def __init__(self, game, points = None):
         super().__init__(game)
 
         self.player = Player()
         self.player.setup(
-            x=SCREEN_WIDTH // 2,           # Center of screen
-            y=SCREEN_HEIGHT - 50,           # Near bottom of screen
+            x=SCREEN_WIDTH // 2,                                    # Center of screen
+            y=SCREEN_HEIGHT - 50,                                   # Near bottom of screen
             dx=0,
             dy=0,
             image_prefix="player_stage",
@@ -25,15 +30,17 @@ class PlayingContext(Context):
         )
         
         
-        self.points = Points()
+        self.points = points if points is not None else Points()
 
         self.enemy = Enemy()
 
         self.player.set_might(rng=1000,dmg=5, cad=30, shotspd=5)
 
 
+        current_level = LEVEL[self.game.level_index]
         self.level = Level()
-        self.level.load("lvl001.rfg")
+        self.level.load(current_level)
+
 
         self.hp_font = pygame.font.SysFont(None, 30)
         self.point_font = pygame.font.SysFont(None, 30)
@@ -58,6 +65,13 @@ class PlayingContext(Context):
             from gameover_context import GameOver
             self.game.replace(GameOver(self.game, self.points))
 
+        if self.level.boss is not None and self.level.boss.hp <= 0:
+            if self.game.next_level():
+                self.game.replace(PlayingContext(self.game, points = self.points))         # nächstes Level laden
+            else:
+                from gameover_context import GameOver
+                self.game.replace(GameOver(self.game, self.points))
+
     # -------------------------------------------------------------- #
     #  Event                                                         #
     # -------------------------------------------------------------- #    
@@ -65,7 +79,8 @@ class PlayingContext(Context):
         if event.type == pygame.KEYDOWN and event.key == pygame.K_e:
             from shop_context import ShopContext
             self.game.push(ShopContext(self.game))       
-  
+
+
     # -------------------------------------------------------------- #
     #  Collision                                                     #
     # -------------------------------------------------------------- #

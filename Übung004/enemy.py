@@ -23,6 +23,7 @@ class Enemy(Entity):
         self.starting_point = 0                                          # Spawn frame (when in the level duration)
         self.ready = False                                               # Whether the enemy has been activated
         self.alive = True                                                # Whether the enemy is still alive
+        self.is_boss = False                                             # Checks if it is a Boss 
 
     # ------------------------------------------------------------------ #
     #  setup — initialize enemy (extends Entity.setup)                   #
