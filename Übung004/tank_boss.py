@@ -14,7 +14,7 @@ class TankBoss(TankEnemy):
         dy: float,
         image_prefix: str,
         anim_speed: int,
-        hp: int = 400,
+        hp: int = 200,
         damage: int = 1,
         speed: int = 1
         ):

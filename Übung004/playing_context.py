@@ -41,10 +41,9 @@ class PlayingContext(Context):
         self.level = Level()
         self.level.load(current_level)
 
-
-        self.hp_font = pygame.font.SysFont(None, 30)
-        self.point_font = pygame.font.SysFont(None, 30)
-        self.trümmer_font = pygame.font.SysFont(None, 30)
+        self.font = pygame.font.SysFont(None, 30)
+        self.boss_font = pygame.font.SysFont(None, 40)
+        
 
     # -------------------------------------------------------------- #
     #  Update                                                        #
@@ -157,18 +156,24 @@ class PlayingContext(Context):
         # Draw player (also draws its shots internally)
         self.player.draw(screen)
 
+        # Draw Boss hp 
+        if self.level.frame_count >= self.level.boss.spawn_frame:      # checks if Boss is spawned 
+            # Draw Boss Hp
+            rect = pygame.Rect(SCREEN_WIDTH // 2 - self.level.boss.hp, 50, self.level.boss.hp * 2, 10)
+            pygame.draw.rect(screen, (RED), rect) 
+
+            # Draw "Boss" over boss hp 
+            boss_text = self.boss_font.render("Boss", True, (WHITE))
+            screen.blit(boss_text, (SCREEN_WIDTH // 2 - 34, 10))
+
         # Draw player HP (text)
-        hp_text = self.hp_font.render(f"HP: {self.player.hp}", True, (RED))
+        hp_text = self.font.render(f"HP: {self.player.hp}", True, (RED))
         screen.blit(hp_text, (10, 10))
 
         # Draw Points 
-        point_text = self.point_font.render(f"Points: {self.points.points}", True, (WHITE))
+        point_text = self.font.render(f"Points: {self.points.points}", True, (WHITE))
         screen.blit(point_text, (100, 10))
 
         # Draw Points 
-        trümmer_text = self.trümmer_font.render(f"Trümmer: {self.points.trümmer}", True, (WHITE))
+        trümmer_text = self.font.render(f"Trümmer: {self.points.trümmer}", True, (WHITE))
         screen.blit(trümmer_text, (10, 770))
-
-    #def handle_event(self, e):
-    #    if e.type == KEYDOWN and e.key == K_SPACE:
-    #        self.player.fire()
