@@ -20,6 +20,7 @@ class Player(Entity):
         self.dmg = 1        # Damage per shot
         self.cad = 50       # Cadence: frames between shots
         self.shotspd = 1    # Shot speed (pixels per frame, upward)
+        self.hp_max = 100
 
         self._cad_counter = 0   # Countdown to next shot
 
@@ -43,13 +44,14 @@ class Player(Entity):
     # ------------------------------------------------------------------ #
     #  set_might — configure weapon stats (mirrors C++ setMight)         #
     # ------------------------------------------------------------------ #
-    def set_might(self, rng: int, dmg: int, cad: int, shotspd: int):
+    def set_might(self, rng: int, dmg: int, cad: int, shotspd: int, hp_max):
         """Configure weapon stats. Called from main after setup."""
         self.rng = rng
         self.dmg = dmg
         self.cad = cad
         self.shotspd = shotspd
         self._cad_counter = cad
+        self.hp_max = hp_max
 
     # ------------------------------------------------------------------ #
     #  step — move, track mouse X, fire shots, update shots              #
@@ -119,13 +121,13 @@ class Player(Entity):
         choice = random.choice(["dmg", "cad", "shotspd", "Trümmer"])
 
         if choice == "dmg":
-            self.set_might(rng=self.rng, dmg=self.dmg + 5, cad=self.cad, shotspd=self.shotspd)
+            self.set_might(rng=self.rng, dmg=self.dmg + 5, cad=self.cad, shotspd=self.shotspd, hp_max=self.hp_max)
             print("Upgrade: Schaden +5")
         elif choice == "cad":
-            self.set_might(rng=self.rng, dmg=self.dmg, cad=max(5, self.cad - 2), shotspd=self.shotspd)
+            self.set_might(rng=self.rng, dmg=self.dmg, cad=max(5, self.cad - 2), shotspd=self.shotspd, hp_max=self.hp_max)
             print("Upgrade: Feuerrate +")
         elif choice == "shotspd":
-            self.set_might(rng=self.rng, dmg=self.dmg, cad=self.cad, shotspd=self.shotspd + 3)
+            self.set_might(rng=self.rng, dmg=self.dmg, cad=self.cad, shotspd=self.shotspd + 3, hp_max=self.hp_max)
             print("Upgrade: Schussgeschwindigkeit +3")
         elif choice == "Trümmer":
             points = Points()

@@ -34,7 +34,7 @@ class PlayingContext(Context):
 
         self.enemy = Enemy()
 
-        self.player.set_might(rng=1000,dmg=5, cad=30, shotspd=5)
+        self.player.set_might(rng=1000,dmg=5, cad=30, shotspd=5, hp_max=100)
 
 
         current_level = LEVEL[self.game.level_index]
@@ -78,7 +78,7 @@ class PlayingContext(Context):
     def handle_event(self, event):
         if event.type == pygame.KEYDOWN and event.key == pygame.K_e:
             from shop_context import ShopContext
-            self.game.push(ShopContext(self.game))       
+            self.game.push(ShopContext(self.game, self.player, self.points))       
 
 
     # -------------------------------------------------------------- #
