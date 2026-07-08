@@ -1,0 +1,135 @@
+# player.py
+# Player entity — follows mouse X, auto-fires shots.
+
+import pygame
+import random
+from entity import Entity
+from shot import Shot
+from points import Points
+
+
+class Player(Entity):
+    """The player ship. Follows mouse X position and auto-fires shots."""
+
+    def __init__(self):
+        super().__init__()
+        self.shots: list[Shot] = []   # Active shots
+
+        # Weapon stats (matching C++ defaults)
+        self.rng = 100      # Shot range in frames
+        self.dmg = 1        # Damage per shot
+        self.cad = 50       # Cadence: frames between shots
+        self.shotspd = 1    # Shot speed (pixels per frame, upward)
+        self.hp_max = 100
+
+        self._cad_counter = 0   # Countdown to next shot
+
+    # ------------------------------------------------------------------ #
+    #  setup — place player near bottom of screen                        #
+    # ------------------------------------------------------------------ #
+    def setup(
+        self,
+        x: float,
+        y: float,
+        dx: float,
+        dy: float,
+        image_prefix: str,
+        anim_speed: int,
+        hp: int,
+    ):
+        """Initialize the player."""
+        super().setup(x, y, dx, dy, image_prefix, anim_speed, hp)
+        self._cad_counter = self.cad
+
+    # ------------------------------------------------------------------ #
+    #  set_might — configure weapon stats (mirrors C++ setMight)         #
+    # ------------------------------------------------------------------ #
+    def set_might(self, rng: int, dmg: int, cad: int, shotspd: int, hp_max):
+        """Configure weapon stats. Called from main after setup."""
+        self.rng = rng
+        self.dmg = dmg
+        self.cad = cad
+        self.shotspd = shotspd
+        self._cad_counter = cad
+        self.hp_max = hp_max
+
+    # ------------------------------------------------------------------ #
+    #  step — move, track mouse X, fire shots, update shots              #
+    # ------------------------------------------------------------------ #
+    def step(self):
+        """Per-frame update: move, fire when cadence allows, update shots."""
+        # Move by direction (in case dir is set)
+        super().step()
+
+        # Player X follows mouse X position
+        mouse_x, _ = pygame.mouse.get_pos()
+        self.pos.x = mouse_x
+
+        # Cadence countdown — fire a shot when it reaches 0
+        self._cad_counter -= 1
+        if self._cad_counter <= 0:
+            self._cad_counter = self.cad
+            self.create_shot()
+
+        # Step all active shots
+        for shot in self.shots:
+            shot.step()
+
+        # Remove dead shots
+        self.shots = [s for s in self.shots if s.is_alive()]
+
+    # ------------------------------------------------------------------ #
+    #  create_shot — spawn a new shot above the player                   #
+    # ------------------------------------------------------------------ #
+    def create_shot(self):
+        """Create a shot 10px above the player, moving upward."""
+        shot = Shot()
+        shot.setup(
+            x=self.pos.x,
+            y=self.pos.y - 10,      # 10 px above player
+            dx=0,
+            dy=-self.shotspd,        # Moving upward (negative Y)
+            image_prefix="Shot",
+            anim_speed=1,
+            hp=1,
+            rng=self.rng,
+            dmg=self.dmg,
+        )
+        self.shots.append(shot)
+
+    # ------------------------------------------------------------------ #
+    #  gets rect for collision                                           #
+    # ------------------------------------------------------------------ #
+    def collision(self, rect):
+        return self.get_rect().colliderect(rect)
+
+    # ------------------------------------------------------------------ #
+    #  draw — draw player and all shots                                  #
+    # ------------------------------------------------------------------ #
+    def draw(self, screen: pygame.Surface):
+        """Draw the player and all active shots."""
+        # Draw shots first (behind player)
+        for shot in self.shots:
+            shot.draw(screen)
+        # Draw player
+        super().draw(screen)
+
+    # ------------------------------------------------------------------ #
+    #  upgrades random value from player                                 #
+    # ------------------------------------------------------------------ #
+    def random_upgrade(self):
+        choice = random.choice(["dmg", "cad", "shotspd", "Trümmer"])
+
+        if choice == "dmg":
+            self.set_might(rng=self.rng, dmg=self.dmg + 5, cad=self.cad, shotspd=self.shotspd, hp_max=self.hp_max)
+            print("Upgrade: Schaden +5")
+        elif choice == "cad":
+            self.set_might(rng=self.rng, dmg=self.dmg, cad=max(5, self.cad - 2), shotspd=self.shotspd, hp_max=self.hp_max)
+            print("Upgrade: Feuerrate +")
+        elif choice == "shotspd":
+            self.set_might(rng=self.rng, dmg=self.dmg, cad=self.cad, shotspd=self.shotspd + 3, hp_max=self.hp_max)
+            print("Upgrade: Schussgeschwindigkeit +3")
+        elif choice == "Trümmer":
+            points = Points()
+            points.points += 1
+            print("Upgrade: Trümmer + 1")
