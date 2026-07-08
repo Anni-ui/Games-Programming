@@ -49,10 +49,14 @@
 
 L T(2) B(Purple_Nebula_04-1024x1024.png) M(Backgnd001music) D(2000)
 
-E D(1) S(3) A(shooting_boss) N(1) T(0) P(500) K(shooting_boss) B(1)
+E D(1) S(3) A(shooting_boss) N(1) T(0) P(2000) K(shooting_boss) B(1)
 
-E D(1) S(3) A(shooting_enemy) N(5) T(0) P(10) K(shooting)
+E D(1) S(3) A(shooting_enemy) N(3) T(0) P(10) K(shooting)
 
-O T(0) D(0) A(obstacle) L(100) C(35,56,90) W(5)
+E D(1) S(3) A(shooting_enemy) N(6) T(0) P(1000) K(shooting)
 
-O T(1) D(100) A(obstacle) L(100) C(22,99,125) W(5)
+E D(1) S(3) A(shooting_enemy) N(9) T(0) P(500) K(shooting)
+
+O T(0) D(1500) A(obstacle) L(100) C(35,56,90) W(5)
+
+O T(1) D(0) A(obstacle) L(100) C(22,99,125) W(5)
