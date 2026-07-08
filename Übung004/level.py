@@ -11,6 +11,8 @@ from fast_enemy import FastEnemy
 from tank_enemy import TankEnemy
 from shooting_enemy import ShotEnemy
 from shooting_boss import ShotBoss
+from fast_boss import FastBoss
+from tank_boss import TankBoss
 from obstacle import Obstacle
 from settings import ASSET_DIR, SCREEN_WIDTH, SCREEN_HEIGHT
 
@@ -20,7 +22,9 @@ ENEMY_TYPES: dict[str, type[Enemy]] = {
     "fast": FastEnemy,
     "tank": TankEnemy,
     "shooting": ShotEnemy,
-    "shooting_boss": ShotBoss
+    "shooting_boss": ShotBoss,
+    "fast_boss": FastBoss,
+    "tank_boss": TankBoss
 }
 
 class Level(Entity):
