@@ -9,11 +9,12 @@ class ShopContext(Context):
 
     UPGRADES = [
     {"name": "Blades", "rarity": "common", "cost": 1,
-    "effect": {"stat": "dmg", "op": "add", "value": 1}},
+    "effect": {"stat": "dmg", "op": "add", "value": 5}},
     {"name": "Hide", "rarity": "common", "cost": 1,
     "effect": {"stat": "hp_max", "op": "add", "value": 10}},
     {"name": "Berserk", "rarity": "rare", "cost": 5,
     "effect": {"stat": "dmg", "op": "mul", "value": 1.5}},
+    {"name": "Speed", "rarity": "common", "cost": 1, "effect": {"stat": "shotspd", "op": "mul", "value": 1.5}},
     ]
 
 
