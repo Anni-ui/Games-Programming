@@ -7,6 +7,7 @@ from level import Level
 from enemy import Enemy
 from points import Points 
 from shooting_enemy import ShotEnemy
+from sounds import Sounds
 
 LEVEL: list[str] = [
     "lvl001.rfg",
@@ -29,13 +30,15 @@ class PlayingContext(Context):
             hp=100,
         )
         
+
         
         self.points = points if points is not None else Points()
 
         self.enemy = Enemy()
 
-        self.player.set_might(rng=1000,dmg=5, cad=30, shotspd=5, hp_max=100)
+        self.player.set_might(rng=1000,dmg=5, cad=30, shotspd=5, hp=100)
 
+        self.sounds = Sounds()
 
         current_level = LEVEL[self.game.level_index]
         self.level = Level()
@@ -61,6 +64,7 @@ class PlayingContext(Context):
         if self.player.hp <= 0:
             self.points.add_score()
             self.points.save_highscore(self.points.score)
+            self.sounds.player_dead.play()
             from gameover_context import GameOver
             self.game.replace(GameOver(self.game, self.points))
 
@@ -68,8 +72,9 @@ class PlayingContext(Context):
             if self.game.next_level():
                 self.game.replace(PlayingContext(self.game, points = self.points))         # nächstes Level laden
             else:
-                from gameover_context import GameOver
-                self.game.replace(GameOver(self.game, self.points))
+                from gamewon_context import GameWon
+                self.sounds.win.play()
+                self.game.replace(GameWon(self.game, self.points))
 
     # -------------------------------------------------------------- #
     #  Event                                                         #
@@ -88,6 +93,7 @@ class PlayingContext(Context):
         for obstacle in self.level.obstacles:
             if obstacle.active and obstacle.collision(self.player.get_rect()):
                 obstacle.active = False
+                self.sounds.power_up.play()
                 self.player.random_upgrade()
 
             # Enemy kann Obstacle nicht mehr überschreiten 
@@ -111,6 +117,7 @@ class PlayingContext(Context):
                 enemies.is_alive()                                   # checkt, ob enemy noch lebt 
                 if not enemies.alive:
                     self.points.bus.publish("enemy_died", enemy=enemies, points=10, trümmer=10)
+                    self.sounds.enemy_dead.play()
                 self.points.bus.publish("player_hit")
 
         # Collision enemies und shots 
@@ -123,6 +130,7 @@ class PlayingContext(Context):
                     enemies.is_alive()                               # checkt, ob enemie noch hp hat 
                     if not enemies.alive:
                         self.points.bus.publish("enemy_died", enemy=enemies, points=10, trümmer=10)
+                        self.sounds.enemy_dead.play()
                     shot.life = 0                                    # Schuss nach Treffer entfernen
                     break
             

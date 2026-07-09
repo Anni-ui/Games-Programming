@@ -6,6 +6,7 @@ import random
 from entity import Entity
 from shot import Shot
 from points import Points
+from sounds import Sounds
 
 
 class Player(Entity):
@@ -44,14 +45,14 @@ class Player(Entity):
     # ------------------------------------------------------------------ #
     #  set_might — configure weapon stats (mirrors C++ setMight)         #
     # ------------------------------------------------------------------ #
-    def set_might(self, rng: int, dmg: int, cad: int, shotspd: int, hp_max):
+    def set_might(self, rng: int, dmg: int, cad: int, shotspd: int, hp):
         """Configure weapon stats. Called from main after setup."""
         self.rng = rng
         self.dmg = dmg
         self.cad = cad
         self.shotspd = shotspd
         self._cad_counter = cad
-        self.hp_max = hp_max
+        self.hp = hp
 
     # ------------------------------------------------------------------ #
     #  step — move, track mouse X, fire shots, update shots              #
@@ -83,6 +84,8 @@ class Player(Entity):
     # ------------------------------------------------------------------ #
     def create_shot(self):
         """Create a shot 10px above the player, moving upward."""
+        sounds = Sounds()
+
         shot = Shot()
         shot.setup(
             x=self.pos.x,
@@ -96,6 +99,7 @@ class Player(Entity):
             dmg=self.dmg,
         )
         self.shots.append(shot)
+        Sounds.play_vary(Sounds.player_shot)
 
     # ------------------------------------------------------------------ #
     #  gets rect for collision                                           #
@@ -121,13 +125,13 @@ class Player(Entity):
         choice = random.choice(["dmg", "cad", "shotspd", "Trümmer"])
 
         if choice == "dmg":
-            self.set_might(rng=self.rng, dmg=self.dmg + 5, cad=self.cad, shotspd=self.shotspd, hp_max=self.hp_max)
+            self.set_might(rng=self.rng, dmg=self.dmg + 5, cad=self.cad, shotspd=self.shotspd, hp=self.hp)
             print("Upgrade: Schaden +5")
         elif choice == "cad":
-            self.set_might(rng=self.rng, dmg=self.dmg, cad=max(5, self.cad - 2), shotspd=self.shotspd, hp_max=self.hp_max)
+            self.set_might(rng=self.rng, dmg=self.dmg, cad=max(5, self.cad - 2), shotspd=self.shotspd, hp=self.hp)
             print("Upgrade: Feuerrate +")
         elif choice == "shotspd":
-            self.set_might(rng=self.rng, dmg=self.dmg, cad=self.cad, shotspd=self.shotspd + 3, hp_max=self.hp_max)
+            self.set_might(rng=self.rng, dmg=self.dmg, cad=self.cad, shotspd=self.shotspd + 3, hp=self.hp)
             print("Upgrade: Schussgeschwindigkeit +3")
         elif choice == "Trümmer":
             points = Points()

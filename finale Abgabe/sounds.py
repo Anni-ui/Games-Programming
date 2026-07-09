@@ -1,13 +1,48 @@
 # Sounds - Sounds werden hier geladen 
 
 import pygame
+import os
+import random
+import numpy as np
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+SOUND_DIR = os.path.join(BASE_DIR, "assets/sounds/")
+
+
+def load_sound(name):
+        return pygame.mixer.Sound(os.path.join(SOUND_DIR, name))
+
+def pitch_shift(sound, semitones=None, factor=None):
+    if factor is None:
+          factor = 2 ** (semitones / 12)
+
+    arr = pygame.sndarray.array(sound)
+    old_len = arr.shape[0]
+    new_len = int(old_len / factor)
+
+    indices = np.linspace(0, old_len - 1, new_len)
+    indices = indices.astype(np.int32)
+
+    if arr.ndim == 1:
+        new_arr == arr[indices]
+    else:
+        new_arr = arr[indices, :]
+
+    new_arr = np.ascontiguousarray(new_arr)
+    return pygame.sndarray.make_sound(new_arr)
+
 
 class Sounds():
-    buy = pygame.mixer.Sound("buy.wav")
-    decline = pygame.mixer.Sound("decline.wav")
-    enemy_shot = pygame.mixer.Sound("enemy_shot.wav")
-    enemy_dead = pygame.mixer.Sound("enemy_dead.wav")
-    player_shot = pygame.mixer.Sound("player_shot.wav")
-    player_dead = pygame.mixer.Sound("player_dead.wav")    
-    power_up = pygame.mixer.Sound("power_up.wav")
-    qin = pygame.mixer.Sound("win.wav")
+    buy = load_sound("buy.wav")
+    decline = load_sound("decline.wav")
+    enemy_shot = load_sound("enemy_shot.wav")
+    enemy_dead = load_sound("enemy_dead.wav")
+    player_shot = load_sound("player_shot.wav")
+    player_dead = load_sound("player_dead.wav")
+    power_up =load_sound("power_up.wav")
+    win = load_sound("win.wav")
+    
+    def play_vary(sound, amount=0.1):     # +/- 10% by default
+        factor = random.uniform(1 - amount, 1 + amount)
+        vary = pitch_shift(sound, factor=factor)
+        vary.play()

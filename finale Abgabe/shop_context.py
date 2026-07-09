@@ -4,6 +4,7 @@ import random
 from game import Context
 from settings import  SCREEN_WIDTH, WHITE
 
+
 class ShopContext(Context):
     RARITY = {"common": 10, "rare": 3, "legendary": 1}
 
@@ -13,7 +14,6 @@ class ShopContext(Context):
     {"name": "Berserk", "rarity": "rare", "cost": 5, "effect": {"stat": "dmg", "op": "mul", "value": 5}},
     {"name": "Speed", "rarity": "common", "cost": 1, "effect": {"stat": "shotspd", "op": "mul", "value": 1.5}},
     ]
-
 
     def __init__(self, game, player, points):
         super().__init__(game)
@@ -48,21 +48,25 @@ class ShopContext(Context):
     # buy                                                            #
     # -------------------------------------------------------------- #
     def try_buy(self, pos):
+        from sounds import Sounds                                    # Sounds werden importiert, da sie nur in dieser funktion verwendet werden 
+        sounds = Sounds()
         for rect, upgrade in zip(self.offer_rects, self.offers):
             if rect.collidepoint(pos):
-                if self.points.trümmer >= upgrade["cost"]:
-                    self.points.trümmer -= upgrade["cost"]
+                if self.points.trümmer >= upgrade["cost"]:           # checkt, ob genügend Trümmer vorhanden sind um das Upgrade zu kaufen 
+                    self.points.trümmer -= upgrade["cost"]           # verringert Trümmer um die Kosten des Upgrades 
+                    sounds.buy.play()                                # Sound für das kaufen wird abgespielt 
                     self.apply_effect(self.player, upgrade["effect"])
-                    self.offers.remove(upgrade)          # gekauftes Angebot verschwindet
+                    self.offers.remove(upgrade)                      # gekauftes Angebot verschwindet
                     print(f"Gekauft: {upgrade['name']}")
                 else:
                     print("Nicht genug Trümmer!")
+                    sounds.decline.play()                            # sound für nicht genug Trümmer wird abgespielt 
                 break
 
     # -------------------------------------------------------------- #
     # Effekt auf den Spieler anwenden                                #
     # -------------------------------------------------------------- #
-    def apply_effect(self, player, effect):                                # every upgrade
+    def apply_effect(self, player, effect):                          # every upgrade
         stat = effect["stat"]
         op, value = effect["op"], effect["value"]
         
@@ -72,7 +76,7 @@ class ShopContext(Context):
         elif op == "mul":
             setattr(player, stat, current * value)
 
-        player.set_might(rng=player.rng, dmg=player.dmg, cad=player.cad, shotspd=player.shotspd, hp_max=player.hp_max)
+        player.set_might(rng=player.rng, dmg=player.dmg, cad=player.cad, shotspd=player.shotspd, hp=player.hp)
 
 
     # -------------------------------------------------------------- #
