@@ -1,0 +1,41 @@
+# README Map 
+# assets -> alle Bilder, Sounds Ordner und Level.rfg Dateien werden hier gestored 
+# assets / sounds -> alle Sounds inklusive Hintergrundmusik 
+
+# game -> entält die Klassen "Game" und "Context", setzt das Stacksystem, initialisiert Hintergrundmusik und screen_shake 
+
+# playing_context -> enthält die Kollisionen, eigenes Event_handeling, draw 
+# shop_context -> enthält upgrades für den Spielercharakter, die können gegen Währung (Trümmer) gekauft werden, zeichnet sich über playing_context
+# gameover_context -> enthält den Highscore und den gameover_screen (zeichnet sich über playing_context)
+# gamewon_context -> enhält den Highscore und den gamewon_context (zeichnet sich über playing_context)
+
+# entity -> legt Grundlage für alle Enemies, Obstacles, Player, Shots  und Level -> mit einer step zur bewegung, einer draw zum zeichnen, einer get_rect für die collision 
+
+# obstacle -> enthält die Werte für Obstacle 
+
+# player -> setzt Werte für den Spielercharakter + erzeugt Schüsse 
+
+# shot -> setzt Werte für die Schüsse von player
+# enemy_shot -> setzt Werte für die Schüsse von shooting_enemy und shooting_boss
+
+# enemy -> legt Grundlage für alle verschiedenen enemy und boss typen 
+
+# fast_enemy -> Enemies mit höherer speed + legt Grundlage für fast_boss
+# tank_enemy -> Enemies mit mehr hp + legt Grundlage für tank_boss
+# shooting_enemy -> Enemies die mit der gleichen Logik wie Player schießen können + legt Grundlage für shooting_boss
+
+# fast_boss -> Boss mit höherer speed 
+# tank_boss -> Boss mit mehr hp 
+# shooting_boss -> Boss der mit der gleichen Logik wie Player schießen können 
+
+# points -> enthält den Highscore und die Währung 
+
+# screen_shake -> setzt funktion um das Bild wackeln zu lassen 
+
+# sounds -> enhält und lädt alle sounds, stellt funktion für pitch variation mit lautstärken Veränderung 
+
+# settings -> setzt Werte für den Bildschirm, Farben und den Pfad für main
+
+# main -> lädt das Spiel 
+
+# run -> uv run main.py
