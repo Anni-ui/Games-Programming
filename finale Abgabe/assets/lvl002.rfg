@@ -47,14 +47,14 @@
 # "W": Describes the pixel width.
 
 
-L T(3) B(Green_Nebula_07-1024x1024.png) M(Backgnd001music) D(2000)
+L T(3) B(Green_Nebula_07-1024x1024.png) M(Musik.wav) D(2000)
 
-E D(1) S(3) A(fast_boss) N(1) T(1) P(1000) K(tank_boss) B(1)
+E D(1) S(3) A(tank_boss) N(1) T(1) P(1000) K(tank_boss) B(1)
 
-E D(1) S(3) A(fast_enemy) N(4) T(2) P(10) K(tank)
+E D(1) S(3) A(tank_enemy) N(4) T(2) P(10) K(tank)
 
 E D(1) S(3) A(fast_enemy) N(7) T(0) P(400) K(fast)
 
-O T(-1) D(0) A(obstacle) L(100) C(35,56,90) W(5)
+O T(0) D(0) A(obstacle) L(100) C(35,56,90) W(5)
 
 O T(1) D(200) A(obstacle) L(100) C(22,99,125) W(5)

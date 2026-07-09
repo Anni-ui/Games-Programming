@@ -53,7 +53,7 @@ E D(1) S(3) A(shooting_boss) N(1) T(2) P(2000) K(shooting_boss) B(1)
 
 E D(1) S(3) A(shooting_enemy) N(3) T(0) P(10) K(shooting)
 
-E D(1) S(3) A(shooting_enemy) N(6) T(3) P(1000) K(fast)
+E D(1) S(3) A(fast_enemy) N(6) T(3) P(1000) K(fast)
 
 E D(1) S(3) A(shooting_enemy) N(9) T(2) P(500) K(shooting)
 
