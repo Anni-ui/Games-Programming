@@ -57,6 +57,10 @@ E D(1) S(3) A(fast_enemy) N(6) T(3) P(1000) K(fast)
 
 E D(1) S(3) A(shooting_enemy) N(9) T(2) P(500) K(shooting)
 
+E D(1) S(3) A(shooting_enemy) N(4) T(1) P(1800) K(shooting)
+
+E D(1) S(3) A(tank_enemy) N(4) T(2) P(1300) K(tank)
+
 O T(0) D(1500) A(obstacle) L(100) C(35,56,90) W(5)
 
 O T(1) D(0) A(obstacle) L(100) C(22,99,125) W(5)

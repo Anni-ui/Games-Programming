@@ -115,7 +115,7 @@ class PlayingContext(Context):
                 self.player.hp -= 1                          
                 enemies.hp -= 5
                 enemies.is_alive()                                   # checkt, ob enemy noch lebt 
-                self.game.screen_shake.start(dauer = 60, intens = 8)
+                self.game.screen_shake.start(dauer = 17, intens = 4)
                 if not enemies.alive:
                     self.points.bus.publish("enemy_died", enemy=enemies, points=10, trümmer=10)
                     Sounds.play_vary(Sounds.enemy_dead, 0.2, 0.6)
@@ -140,9 +140,13 @@ class PlayingContext(Context):
             if isinstance(enemies, ShotEnemy):
                 for shot in enemies.shots:
                     if self.player.collision(shot.get_rect()):
+                        self.game.screen_shake.start(dauer = 17, intens = 4)
                         self.player.hp -= shot.dmg
                         shot.life = 0
                         break
+
+        if self.level.frame_count == self.level.boss.spawn_frame:      # checks if Boss is spawned 
+            self.game.screen_shake.start(dauer = 30, intens = 7)
 
     # -------------------------------------------------------------- #
     # Draw                                                           #
@@ -168,6 +172,7 @@ class PlayingContext(Context):
 
         # Draw Boss hp 
         if self.level.frame_count >= self.level.boss.spawn_frame:      # checks if Boss is spawned 
+            self.game.screen_shake.start(dauer = 10, intens = 3)
             # Draw Boss Hp
             rect = pygame.Rect(SCREEN_WIDTH // 2 - self.level.boss.hp, 50, self.level.boss.hp * 2, 10)
             pygame.draw.rect(screen, (RED), rect) 
