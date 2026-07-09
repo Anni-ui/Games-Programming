@@ -84,6 +84,7 @@ class Player(Entity):
     # ------------------------------------------------------------------ #
     def create_shot(self):
         """Create a shot 10px above the player, moving upward."""
+
         sounds = Sounds()
 
         shot = Shot()

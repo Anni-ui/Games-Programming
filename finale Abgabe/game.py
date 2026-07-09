@@ -2,6 +2,9 @@
 # Context Klasse, von der alle State Klassen erben 
 
 import pygame
+from sounds import  BASE_DIR
+import os
+from shake import ScreenShake
 
 class Context:
  
@@ -19,9 +22,15 @@ class Context:
 
 class Game:
 
-    def __init__(self):
+    def __init__(self,):
         self.stack = []
         self.level_index = 0
+
+        self.screen_shake = ScreenShake()
+
+        pygame.mixer.music.load(os.path.join(BASE_DIR, "assets", "sounds", "musik.wav"))
+        pygame.mixer.music.play(loops=-1)
+
 
     # -------------------------------------------------------------- #
     #  nächstes Level                                                #
@@ -85,9 +94,17 @@ class Game:
         if self.current:
             self.current.update(dt)
 
+        self.screen_shake.update()
+
     # ------------------------------------------------------------------ #
     #  zeichnet alles von unten nach oben                                #
     # ------------------------------------------------------------------ #
     def draw(self, screen):
-        for ctx in self.stack:            # bottom-up
-            ctx.draw(screen)              # shop over game
+        game_surface = pygame.Surface(screen.get_size())
+
+        for ctx in self.stack:                                           # bottom-up
+            ctx.draw(game_surface)                                       # shop over game
+
+        dx, dy = self.screen_shake.get_offset()
+        screen.fill((0, 0, 0))                                           # Bildschirm leeren
+        screen.blit(game_surface, (dx, dy))                              # mit Offset draufkopieren

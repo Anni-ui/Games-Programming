@@ -115,8 +115,10 @@ class PlayingContext(Context):
                 self.player.hp -= 1                          
                 enemies.hp -= 5
                 enemies.is_alive()                                   # checkt, ob enemy noch lebt 
+                self.game.screen_shake.start(dauer = 60, intens = 8)
                 if not enemies.alive:
                     self.points.bus.publish("enemy_died", enemy=enemies, points=10, trümmer=10)
+                    Sounds.play_vary(Sounds.enemy_dead, 0.2, 0.6)
                     self.sounds.enemy_dead.play()
                 self.points.bus.publish("player_hit")
 

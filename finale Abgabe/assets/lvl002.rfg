@@ -47,7 +47,7 @@
 # "W": Describes the pixel width.
 
 
-L T(3) B(Green_Nebula_07-1024x1024.png) M(Musik.wav) D(2000)
+L T(3) B(Green_Nebula_07-1024x1024.png) D(2000)
 
 E D(1) S(3) A(tank_boss) N(1) T(1) P(1000) K(tank_boss) B(1)
 

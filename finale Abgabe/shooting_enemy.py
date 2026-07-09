@@ -2,6 +2,7 @@
 import pygame
 from enemy import Enemy
 from enemy_shot import EnemyShot
+from sounds import Sounds
 
 class ShotEnemy(Enemy):
     def __init__(self):
@@ -89,6 +90,7 @@ class ShotEnemy(Enemy):
             dmg=self.dmg,
         )
         self.shots.append(shot)
+        Sounds.play_vary(Sounds.enemy_shot, 0.2, 0.5)
 
     # ------------------------------------------------------------------ #
     #  Draw Enemy and all Shots                                          #
